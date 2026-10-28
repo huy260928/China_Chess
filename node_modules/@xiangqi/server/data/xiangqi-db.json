@@ -1,0 +1,1431 @@
+{
+  "users": [
+    {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "username": "HuaNganXuyen",
+      "email": "huanganxuyen@xiangqi.vn",
+      "passwordHash": "$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj4oL8/.1/1e",
+      "avatarUrl": "/avatars/default-general.png",
+      "eloRating": 2240,
+      "gamesPlayed": 84,
+      "wins": 62,
+      "losses": 8,
+      "draws": 14,
+      "createdAt": "2026-10-20T03:29:44.607Z",
+      "updatedAt": "2026-10-20T03:29:44.607Z"
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000002",
+      "username": "VuongThienNhat",
+      "email": "vuongthiennhat@xiangqi.vn",
+      "passwordHash": "$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj4oL8/.1/1e",
+      "avatarUrl": "/avatars/default-general.png",
+      "eloRating": 2310,
+      "gamesPlayed": 96,
+      "wins": 74,
+      "losses": 9,
+      "draws": 13,
+      "createdAt": "2026-10-20T03:29:44.607Z",
+      "updatedAt": "2026-10-20T03:29:44.607Z"
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "username": "LaiLyHuynh",
+      "email": "lailyhuynh@xiangqi.vn",
+      "passwordHash": "$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj4oL8/.1/1e",
+      "avatarUrl": "/avatars/default-general.png",
+      "eloRating": 2195,
+      "gamesPlayed": 70,
+      "wins": 51,
+      "losses": 9,
+      "draws": 10,
+      "createdAt": "2026-10-20T03:29:44.607Z",
+      "updatedAt": "2026-10-20T03:29:44.607Z"
+    },
+    {
+      "id": "0aefabae-d1f8-47d5-8b7f-6a06515466f6",
+      "username": "test01",
+      "email": "test01@gmail.com",
+      "passwordHash": "$scrypt$12$97e663950cd94d37f34f698cf538c3ef$7ee37094fc531a582b1144fad0672ba32a4e56f622a02c36ad3eae5e64fcf029a4081df05fa2a4567f5a90e0f0c64f43858a53db3e8fe0334c956ffd3e3c7907",
+      "avatarUrl": "/avatars/default-general.png",
+      "eloRating": 1200,
+      "gamesPlayed": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "createdAt": "2026-10-20T03:38:49.281Z",
+      "updatedAt": "2026-10-20T03:38:49.281Z"
+    }
+  ],
+  "refreshTokens": [
+    {
+      "id": "71242bc4-05c7-4916-82b6-2241f6d4df73",
+      "tokenHash": "c3e93d53e0ce22f5f038612cb645a2511a213ca8e3a13519e5e2b128a38f81f4",
+      "userId": "0aefabae-d1f8-47d5-8b7f-6a06515466f6",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+      "ipAddress": "::1",
+      "expiresAt": "2026-10-27T03:38:49.284Z",
+      "revokedAt": "2026-10-20T03:55:28.606Z",
+      "createdAt": "2026-10-20T03:38:49.284Z"
+    },
+    {
+      "id": "a92c143d-a682-4f21-ab34-7b1fba739814",
+      "tokenHash": "b24504d9e1ef2e2b92c492f7383f454d0d992149af34f567304bc6f22ae6fa71",
+      "userId": "0aefabae-d1f8-47d5-8b7f-6a06515466f6",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+      "ipAddress": "::1",
+      "expiresAt": "2026-10-27T03:55:28.606Z",
+      "revokedAt": null,
+      "createdAt": "2026-10-20T03:55:28.608Z"
+    },
+    {
+      "id": "32ec3b43-657d-4287-9fbf-59270c3301af",
+      "tokenHash": "2a95dd8d9fae3ef78ed4235415d69fccc046f852193ddab1126eb5a3c1916a07",
+      "userId": "0aefabae-d1f8-47d5-8b7f-6a06515466f6",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+      "ipAddress": "::1",
+      "expiresAt": "2026-10-27T03:55:39.410Z",
+      "revokedAt": "2026-10-20T04:31:06.189Z",
+      "createdAt": "2026-10-20T03:55:39.410Z"
+    },
+    {
+      "id": "5f67d605-77ca-482d-9428-b2a8d23b4b3c",
+      "tokenHash": "9173c8ce473a5ff9653f56dd042f01026d91ea0e4cb17abe2f9075526aef6b63",
+      "userId": "0aefabae-d1f8-47d5-8b7f-6a06515466f6",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+      "ipAddress": "::1",
+      "expiresAt": "2026-10-27T04:31:06.189Z",
+      "revokedAt": null,
+      "createdAt": "2026-10-20T04:31:06.191Z"
+    },
+    {
+      "id": "2b6d284d-47de-4fe5-a23b-dd2a1d496f5d",
+      "tokenHash": "2c66a2c53ff7afda30b0e75e0cb7e1fb1a34c959d5d7252dd88b938819d5b740",
+      "userId": "0aefabae-d1f8-47d5-8b7f-6a06515466f6",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+      "ipAddress": "::1",
+      "expiresAt": "2026-10-27T04:31:14.372Z",
+      "revokedAt": null,
+      "createdAt": "2026-10-20T04:31:14.372Z"
+    }
+  ],
+  "matches": [
+    {
+      "id": "656462dd-a800-4827-aa28-630ca6157396",
+      "roomCode": "room-1792467547864-ubrlu",
+      "mode": "PVE_AI",
+      "status": "COMPLETED",
+      "redPlayerId": "0aefabae-d1f8-47d5-8b7f-6a06515466f6",
+      "blackPlayerId": null,
+      "aiDifficulty": "EASY",
+      "winnerSide": "BLACK",
+      "winnerUserId": null,
+      "endReason": "RESIGNATION",
+      "initialFen": "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w - - 0 1",
+      "finalFen": "rnbakab1r/9/6n2/p1p1C1p1p/9/9/P3P1c1P/2N3C2/9/R1BAKABR1 w - - 2 6",
+      "moveHistoryJson": [
+        {
+          "from": {
+            "row": 9,
+            "col": 1
+          },
+          "to": {
+            "row": 7,
+            "col": 2
+          },
+          "piece": {
+            "type": "n",
+            "side": "w",
+            "fenChar": "N"
+          },
+          "captured": null,
+          "iccs": "b0c2",
+          "wxf": "N8+7",
+          "vietnameseNotation": "Mã 8 tiến 7",
+          "fenBefore": "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w - - 0 1",
+          "fenAfter": "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1CN4C1/9/R1BAKABNR b - - 1 1",
+          "zobristHashAfter": "43d968cb7214aaef",
+          "isCheck": false,
+          "isCheckmate": false,
+          "isStalemate": false,
+          "isThreefoldRepetition": false,
+          "halfMoveClock": 1,
+          "fullMoveNumber": 1,
+          "timestamp": 1792467561960,
+          "redTimeLeftMs": 885908,
+          "blackTimeLeftMs": 900000
+        },
+        {
+          "from": {
+            "row": 2,
+            "col": 7
+          },
+          "to": {
+            "row": 9,
+            "col": 7
+          },
+          "piece": {
+            "type": "c",
+            "side": "b",
+            "fenChar": "c"
+          },
+          "captured": {
+            "type": "n",
+            "side": "w",
+            "fenChar": "N"
+          },
+          "iccs": "h7h0",
+          "wxf": "C8+7",
+          "vietnameseNotation": "Pháo 8 tiến 7",
+          "fenBefore": "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1CN4C1/9/R1BAKABNR b - - 1 1",
+          "fenAfter": "rnbakabnr/9/1c7/p1p1p1p1p/9/9/P1P1P1P1P/1CN4C1/9/R1BAKABcR w - - 0 2",
+          "zobristHashAfter": "c6135776c118ac78",
+          "isCheck": false,
+          "isCheckmate": false,
+          "isStalemate": false,
+          "isThreefoldRepetition": false,
+          "halfMoveClock": 0,
+          "fullMoveNumber": 2,
+          "timestamp": 1792467561976,
+          "redTimeLeftMs": 885908,
+          "blackTimeLeftMs": 899984
+        },
+        {
+          "from": {
+            "row": 9,
+            "col": 8
+          },
+          "to": {
+            "row": 9,
+            "col": 7
+          },
+          "piece": {
+            "type": "r",
+            "side": "w",
+            "fenChar": "R"
+          },
+          "captured": {
+            "type": "c",
+            "side": "b",
+            "fenChar": "c"
+          },
+          "iccs": "i0h0",
+          "wxf": "R1.2",
+          "vietnameseNotation": "Xe 1 bình 2",
+          "fenBefore": "rnbakabnr/9/1c7/p1p1p1p1p/9/9/P1P1P1P1P/1CN4C1/9/R1BAKABcR w - - 0 2",
+          "fenAfter": "rnbakabnr/9/1c7/p1p1p1p1p/9/9/P1P1P1P1P/1CN4C1/9/R1BAKABR1 b - - 0 2",
+          "zobristHashAfter": "aefd106378ac71b1",
+          "isCheck": false,
+          "isCheckmate": false,
+          "isStalemate": false,
+          "isThreefoldRepetition": false,
+          "halfMoveClock": 0,
+          "fullMoveNumber": 2,
+          "timestamp": 1792467568639,
+          "redTimeLeftMs": 879245,
+          "blackTimeLeftMs": 899984
+        },
+        {
+          "from": {
+            "row": 2,
+            "col": 1
+          },
+          "to": {
+            "row": 2,
+            "col": 2
+          },
+          "piece": {
+            "type": "c",
+            "side": "b",
+            "fenChar": "c"
+          },
+          "captured": null,
+          "iccs": "b7c7",
+          "wxf": "C2.3",
+          "vietnameseNotation": "Pháo 2 bình 3",
+          "fenBefore": "rnbakabnr/9/1c7/p1p1p1p1p/9/9/P1P1P1P1P/1CN4C1/9/R1BAKABR1 b - - 0 2",
+          "fenAfter": "rnbakabnr/9/2c6/p1p1p1p1p/9/9/P1P1P1P1P/1CN4C1/9/R1BAKABR1 w - - 1 3",
+          "zobristHashAfter": "b3357fafc0ccccb5",
+          "isCheck": false,
+          "isCheckmate": false,
+          "isStalemate": false,
+          "isThreefoldRepetition": false,
+          "halfMoveClock": 1,
+          "fullMoveNumber": 3,
+          "timestamp": 1792467568645,
+          "redTimeLeftMs": 879245,
+          "blackTimeLeftMs": 899978
+        },
+        {
+          "from": {
+            "row": 7,
+            "col": 1
+          },
+          "to": {
+            "row": 3,
+            "col": 1
+          },
+          "piece": {
+            "type": "c",
+            "side": "w",
+            "fenChar": "C"
+          },
+          "captured": null,
+          "iccs": "b2b6",
+          "wxf": "C8+4",
+          "vietnameseNotation": "Pháo 8 tiến 4",
+          "fenBefore": "rnbakabnr/9/2c6/p1p1p1p1p/9/9/P1P1P1P1P/1CN4C1/9/R1BAKABR1 w - - 1 3",
+          "fenAfter": "rnbakabnr/9/2c6/pCp1p1p1p/9/9/P1P1P1P1P/2N4C1/9/R1BAKABR1 b - - 2 3",
+          "zobristHashAfter": "6b92595f1dec8715",
+          "isCheck": false,
+          "isCheckmate": false,
+          "isStalemate": false,
+          "isThreefoldRepetition": false,
+          "halfMoveClock": 2,
+          "fullMoveNumber": 3,
+          "timestamp": 1792467604827,
+          "redTimeLeftMs": 843063,
+          "blackTimeLeftMs": 899978
+        },
+        {
+          "from": {
+            "row": 2,
+            "col": 2
+          },
+          "to": {
+            "row": 6,
+            "col": 2
+          },
+          "piece": {
+            "type": "c",
+            "side": "b",
+            "fenChar": "c"
+          },
+          "captured": {
+            "type": "p",
+            "side": "w",
+            "fenChar": "P"
+          },
+          "iccs": "c7c3",
+          "wxf": "C3+4",
+          "vietnameseNotation": "Pháo 3 tiến 4",
+          "fenBefore": "rnbakabnr/9/2c6/pCp1p1p1p/9/9/P1P1P1P1P/2N4C1/9/R1BAKABR1 b - - 2 3",
+          "fenAfter": "rnbakabnr/9/9/pCp1p1p1p/9/9/P1c1P1P1P/2N4C1/9/R1BAKABR1 w - - 0 4",
+          "zobristHashAfter": "7656aa16329df6e7",
+          "isCheck": false,
+          "isCheckmate": false,
+          "isStalemate": false,
+          "isThreefoldRepetition": false,
+          "halfMoveClock": 0,
+          "fullMoveNumber": 4,
+          "timestamp": 1792467604834,
+          "redTimeLeftMs": 843063,
+          "blackTimeLeftMs": 899971
+        },
+        {
+          "from": {
+            "row": 3,
+            "col": 1
+          },
+          "to": {
+            "row": 3,
+            "col": 4
+          },
+          "piece": {
+            "type": "c",
+            "side": "w",
+            "fenChar": "C"
+          },
+          "captured": {
+            "type": "p",
+            "side": "b",
+            "fenChar": "p"
+          },
+          "iccs": "b6e6",
+          "wxf": "C8.5",
+          "vietnameseNotation": "Pháo 8 bình 5",
+          "fenBefore": "rnbakabnr/9/9/pCp1p1p1p/9/9/P1c1P1P1P/2N4C1/9/R1BAKABR1 w - - 0 4",
+          "fenAfter": "rnbakabnr/9/9/p1p1C1p1p/9/9/P1c1P1P1P/2N4C1/9/R1BAKABR1 b - - 0 4",
+          "zobristHashAfter": "f32f0a7c5886c695",
+          "isCheck": false,
+          "isCheckmate": false,
+          "isStalemate": false,
+          "isThreefoldRepetition": false,
+          "halfMoveClock": 0,
+          "fullMoveNumber": 4,
+          "timestamp": 1792467628373,
+          "redTimeLeftMs": 819525,
+          "blackTimeLeftMs": 899971
+        },
+        {
+          "from": {
+            "row": 6,
+            "col": 2
+          },
+          "to": {
+            "row": 6,
+            "col": 6
+          },
+          "piece": {
+            "type": "c",
+            "side": "b",
+            "fenChar": "c"
+          },
+          "captured": {
+            "type": "p",
+            "side": "w",
+            "fenChar": "P"
+          },
+          "iccs": "c3g3",
+          "wxf": "C3.7",
+          "vietnameseNotation": "Pháo 3 bình 7",
+          "fenBefore": "rnbakabnr/9/9/p1p1C1p1p/9/9/P1c1P1P1P/2N4C1/9/R1BAKABR1 b - - 0 4",
+          "fenAfter": "rnbakabnr/9/9/p1p1C1p1p/9/9/P3P1c1P/2N4C1/9/R1BAKABR1 w - - 0 5",
+          "zobristHashAfter": "38f8be311843c902",
+          "isCheck": false,
+          "isCheckmate": false,
+          "isStalemate": false,
+          "isThreefoldRepetition": false,
+          "halfMoveClock": 0,
+          "fullMoveNumber": 5,
+          "timestamp": 1792467628378,
+          "redTimeLeftMs": 819525,
+          "blackTimeLeftMs": 899966
+        },
+        {
+          "from": {
+            "row": 7,
+            "col": 7
+          },
+          "to": {
+            "row": 7,
+            "col": 6
+          },
+          "piece": {
+            "type": "c",
+            "side": "w",
+            "fenChar": "C"
+          },
+          "captured": null,
+          "iccs": "h2g2",
+          "wxf": "C2.3",
+          "vietnameseNotation": "Pháo 2 bình 3",
+          "fenBefore": "rnbakabnr/9/9/p1p1C1p1p/9/9/P3P1c1P/2N4C1/9/R1BAKABR1 w - - 0 5",
+          "fenAfter": "rnbakabnr/9/9/p1p1C1p1p/9/9/P3P1c1P/2N3C2/9/R1BAKABR1 b - - 1 5",
+          "zobristHashAfter": "8ecabce9b5f4fcda",
+          "isCheck": false,
+          "isCheckmate": false,
+          "isStalemate": false,
+          "isThreefoldRepetition": false,
+          "halfMoveClock": 1,
+          "fullMoveNumber": 5,
+          "timestamp": 1792467633187,
+          "redTimeLeftMs": 814717,
+          "blackTimeLeftMs": 899966
+        },
+        {
+          "from": {
+            "row": 0,
+            "col": 7
+          },
+          "to": {
+            "row": 2,
+            "col": 6
+          },
+          "piece": {
+            "type": "n",
+            "side": "b",
+            "fenChar": "n"
+          },
+          "captured": null,
+          "iccs": "h9g7",
+          "wxf": "N8+7",
+          "vietnameseNotation": "Mã 8 tiến 7",
+          "fenBefore": "rnbakabnr/9/9/p1p1C1p1p/9/9/P3P1c1P/2N3C2/9/R1BAKABR1 b - - 1 5",
+          "fenAfter": "rnbakab1r/9/6n2/p1p1C1p1p/9/9/P3P1c1P/2N3C2/9/R1BAKABR1 w - - 2 6",
+          "zobristHashAfter": "8ef0d9bfd5d1660a",
+          "isCheck": false,
+          "isCheckmate": false,
+          "isStalemate": false,
+          "isThreefoldRepetition": false,
+          "halfMoveClock": 2,
+          "fullMoveNumber": 6,
+          "timestamp": 1792467633192,
+          "redTimeLeftMs": 814717,
+          "blackTimeLeftMs": 899961
+        }
+      ],
+      "moveHistoryWxf": "N8+7 C8+7 R1.2 C2.3 C8+4 C3+4 C8.5 C3.7 C2.3 N8+7",
+      "totalTimeMs": 900000,
+      "turnTimeMs": 60000,
+      "redTimeLeftMs": 798784,
+      "blackTimeLeftMs": 899961,
+      "redEloBefore": null,
+      "blackEloBefore": null,
+      "redEloDelta": null,
+      "blackEloDelta": null,
+      "startedAt": "2026-10-20T03:39:07.865Z",
+      "endedAt": "2026-10-20T03:40:49.126Z",
+      "createdAt": "2026-10-20T03:39:07.865Z",
+      "updatedAt": "2026-10-20T03:40:49.126Z"
+    },
+    {
+      "id": "6b4b643d-cb89-4a39-9052-7b5560742613",
+      "roomCode": "room-1792468547231-e7amg",
+      "mode": "PVE_AI",
+      "status": "COMPLETED",
+      "redPlayerId": "0aefabae-d1f8-47d5-8b7f-6a06515466f6",
+      "blackPlayerId": null,
+      "aiDifficulty": "EASY",
+      "winnerSide": "BLACK",
+      "winnerUserId": null,
+      "endReason": "TIMEOUT",
+      "initialFen": "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w - - 0 1",
+      "finalFen": "1rbakabnr/9/1c7/p1p3p1p/4p4/2P6/P5c1P/7C1/9/RNBAKABNR w - - 0 5",
+      "moveHistoryJson": [
+        {
+          "from": {
+            "row": 7,
+            "col": 1
+          },
+          "to": {
+            "row": 0,
+            "col": 1
+          },
+          "piece": {
+            "type": "c",
+            "side": "w",
+            "fenChar": "C"
+          },
+          "captured": {
+            "type": "n",
+            "side": "b",
+            "fenChar": "n"
+          },
+          "iccs": "b2b9",
+          "wxf": "C8+7",
+          "vietnameseNotation": "Pháo 8 tiến 7",
+          "fenBefore": "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w - - 0 1",
+          "fenAfter": "rCbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/7C1/9/RNBAKABNR b - - 0 1",
+          "zobristHashAfter": "fae5148c8d1db8a3",
+          "isCheck": false,
+          "isCheckmate": false,
+          "isStalemate": false,
+          "isThreefoldRepetition": false,
+          "halfMoveClock": 0,
+          "fullMoveNumber": 1,
+          "timestamp": 1792468567925,
+          "redTimeLeftMs": 1779310,
+          "blackTimeLeftMs": 1800000
+        },
+        {
+          "from": {
+            "row": 0,
+            "col": 0
+          },
+          "to": {
+            "row": 0,
+            "col": 1
+          },
+          "piece": {
+            "type": "r",
+            "side": "b",
+            "fenChar": "r"
+          },
+          "captured": {
+            "type": "c",
+            "side": "w",
+            "fenChar": "C"
+          },
+          "iccs": "a9b9",
+          "wxf": "R1.2",
+          "vietnameseNotation": "Xe 1 bình 2",
+          "fenBefore": "rCbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/7C1/9/RNBAKABNR b - - 0 1",
+          "fenAfter": "1rbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/7C1/9/RNBAKABNR w - - 0 2",
+          "zobristHashAfter": "8163ae7a6ccf2650",
+          "isCheck": false,
+          "isCheckmate": false,
+          "isStalemate": false,
+          "isThreefoldRepetition": false,
+          "halfMoveClock": 0,
+          "fullMoveNumber": 2,
+          "timestamp": 1792468567950,
+          "redTimeLeftMs": 1779310,
+          "blackTimeLeftMs": 1799975
+        },
+        {
+          "from": {
+            "row": 6,
+            "col": 2
+          },
+          "to": {
+            "row": 5,
+            "col": 2
+          },
+          "piece": {
+            "type": "p",
+            "side": "w",
+            "fenChar": "P"
+          },
+          "captured": null,
+          "iccs": "c3c4",
+          "wxf": "P7+1",
+          "vietnameseNotation": "Tốt 7 tiến 1",
+          "fenBefore": "1rbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/7C1/9/RNBAKABNR w - - 0 2",
+          "fenAfter": "1rbakabnr/9/1c5c1/p1p1p1p1p/9/2P6/P3P1P1P/7C1/9/RNBAKABNR b - - 0 2",
+          "zobristHashAfter": "316b84f83fcd31b9",
+          "isCheck": false,
+          "isCheckmate": false,
+          "isStalemate": false,
+          "isThreefoldRepetition": false,
+          "halfMoveClock": 0,
+          "fullMoveNumber": 2,
+          "timestamp": 1792468572242,
+          "redTimeLeftMs": 1775018,
+          "blackTimeLeftMs": 1799975
+        },
+        {
+          "from": {
+            "row": 2,
+            "col": 7
+          },
+          "to": {
+            "row": 2,
+            "col": 6
+          },
+          "piece": {
+            "type": "c",
+            "side": "b",
+            "fenChar": "c"
+          },
+          "captured": null,
+          "iccs": "h7g7",
+          "wxf": "C8.7",
+          "vietnameseNotation": "Pháo 8 bình 7",
+          "fenBefore": "1rbakabnr/9/1c5c1/p1p1p1p1p/9/2P6/P3P1P1P/7C1/9/RNBAKABNR b - - 0 2",
+          "fenAfter": "1rbakabnr/9/1c4c2/p1p1p1p1p/9/2P6/P3P1P1P/7C1/9/RNBAKABNR w - - 1 3",
+          "zobristHashAfter": "913f0a4d25bc4af4",
+          "isCheck": false,
+          "isCheckmate": false,
+          "isStalemate": false,
+          "isThreefoldRepetition": false,
+          "halfMoveClock": 1,
+          "fullMoveNumber": 3,
+          "timestamp": 1792468572249,
+          "redTimeLeftMs": 1775018,
+          "blackTimeLeftMs": 1799968
+        },
+        {
+          "from": {
+            "row": 6,
+            "col": 4
+          },
+          "to": {
+            "row": 5,
+            "col": 4
+          },
+          "piece": {
+            "type": "p",
+            "side": "w",
+            "fenChar": "P"
+          },
+          "captured": null,
+          "iccs": "e3e4",
+          "wxf": "P5+1",
+          "vietnameseNotation": "Tốt 5 tiến 1",
+          "fenBefore": "1rbakabnr/9/1c4c2/p1p1p1p1p/9/2P6/P3P1P1P/7C1/9/RNBAKABNR w - - 1 3",
+          "fenAfter": "1rbakabnr/9/1c4c2/p1p1p1p1p/9/2P1P4/P5P1P/7C1/9/RNBAKABNR b - - 0 3",
+          "zobristHashAfter": "a981b001aa251c68",
+          "isCheck": false,
+          "isCheckmate": false,
+          "isStalemate": false,
+          "isThreefoldRepetition": false,
+          "halfMoveClock": 0,
+          "fullMoveNumber": 3,
+          "timestamp": 1792468574603,
+          "redTimeLeftMs": 1772664,
+          "blackTimeLeftMs": 1799968
+        },
+        {
+          "from": {
+            "row": 2,
+            "col": 6
+          },
+          "to": {
+            "row": 6,
+            "col": 6
+          },
+          "piece": {
+            "type": "c",
+            "side": "b",
+            "fenChar": "c"
+          },
+          "captured": {
+            "type": "p",
+            "side": "w",
+            "fenChar": "P"
+          },
+          "iccs": "g7g3",
+          "wxf": "C7+4",
+          "vietnameseNotation": "Pháo 7 tiến 4",
+          "fenBefore": "1rbakabnr/9/1c4c2/p1p1p1p1p/9/2P1P4/P5P1P/7C1/9/RNBAKABNR b - - 0 3",
+          "fenAfter": "1rbakabnr/9/1c7/p1p1p1p1p/9/2P1P4/P5c1P/7C1/9/RNBAKABNR w - - 0 4",
+          "zobristHashAfter": "3c1f130f77120106",
+          "isCheck": false,
+          "isCheckmate": false,
+          "isStalemate": false,
+          "isThreefoldRepetition": false,
+          "halfMoveClock": 0,
+          "fullMoveNumber": 4,
+          "timestamp": 1792468574608,
+          "redTimeLeftMs": 1772664,
+          "blackTimeLeftMs": 1799963
+        },
+        {
+          "from": {
+            "row": 5,
+            "col": 4
+          },
+          "to": {
+            "row": 4,
+            "col": 4
+          },
+          "piece": {
+            "type": "p",
+            "side": "w",
+            "fenChar": "P"
+          },
+          "captured": null,
+          "iccs": "e4e5",
+          "wxf": "P5+1",
+          "vietnameseNotation": "Tốt 5 tiến 1",
+          "fenBefore": "1rbakabnr/9/1c7/p1p1p1p1p/9/2P1P4/P5c1P/7C1/9/RNBAKABNR w - - 0 4",
+          "fenAfter": "1rbakabnr/9/1c7/p1p1p1p1p/4P4/2P6/P5c1P/7C1/9/RNBAKABNR b - - 0 4",
+          "zobristHashAfter": "8c28de27e894384b",
+          "isCheck": false,
+          "isCheckmate": false,
+          "isStalemate": false,
+          "isThreefoldRepetition": false,
+          "halfMoveClock": 0,
+          "fullMoveNumber": 4,
+          "timestamp": 1792468610955,
+          "redTimeLeftMs": 1736318,
+          "blackTimeLeftMs": 1799963
+        },
+        {
+          "from": {
+            "row": 3,
+            "col": 4
+          },
+          "to": {
+            "row": 4,
+            "col": 4
+          },
+          "piece": {
+            "type": "p",
+            "side": "b",
+            "fenChar": "p"
+          },
+          "captured": {
+            "type": "p",
+            "side": "w",
+            "fenChar": "P"
+          },
+          "iccs": "e6e5",
+          "wxf": "P5+1",
+          "vietnameseNotation": "Tốt 5 tiến 1",
+          "fenBefore": "1rbakabnr/9/1c7/p1p1p1p1p/4P4/2P6/P5c1P/7C1/9/RNBAKABNR b - - 0 4",
+          "fenAfter": "1rbakabnr/9/1c7/p1p3p1p/4p4/2P6/P5c1P/7C1/9/RNBAKABNR w - - 0 5",
+          "zobristHashAfter": "44a93388115d911a",
+          "isCheck": false,
+          "isCheckmate": false,
+          "isStalemate": false,
+          "isThreefoldRepetition": false,
+          "halfMoveClock": 0,
+          "fullMoveNumber": 5,
+          "timestamp": 1792468610963,
+          "redTimeLeftMs": 1736318,
+          "blackTimeLeftMs": 1799955
+        }
+      ],
+      "moveHistoryWxf": "C8+7 R1.2 P7+1 C8.7 P5+1 C7+4 P5+1 P5+1",
+      "totalTimeMs": 1800000,
+      "turnTimeMs": 60000,
+      "redTimeLeftMs": 1676286,
+      "blackTimeLeftMs": 1799955,
+      "redEloBefore": null,
+      "blackEloBefore": null,
+      "redEloDelta": null,
+      "blackEloDelta": null,
+      "startedAt": "2026-10-20T03:55:47.232Z",
+      "endedAt": "2026-10-20T03:57:50.996Z",
+      "createdAt": "2026-10-20T03:55:47.232Z",
+      "updatedAt": "2026-10-20T03:57:50.997Z"
+    },
+    {
+      "id": "b64ab82f-50f7-435e-b052-3a71553e71c7",
+      "roomCode": "room-1792468708563-ecy4r",
+      "mode": "PVE_AI",
+      "status": "COMPLETED",
+      "redPlayerId": "0aefabae-d1f8-47d5-8b7f-6a06515466f6",
+      "blackPlayerId": null,
+      "aiDifficulty": "EASY",
+      "winnerSide": "BLACK",
+      "winnerUserId": null,
+      "endReason": "TIMEOUT",
+      "initialFen": "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w - - 0 1",
+      "finalFen": "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w - - 0 1",
+      "moveHistoryJson": [],
+      "moveHistoryWxf": "",
+      "totalTimeMs": 1800000,
+      "turnTimeMs": 60000,
+      "redTimeLeftMs": 1739829,
+      "blackTimeLeftMs": 1800000,
+      "redEloBefore": null,
+      "blackEloBefore": null,
+      "redEloDelta": null,
+      "blackEloDelta": null,
+      "startedAt": "2026-10-20T03:58:28.564Z",
+      "endedAt": "2026-10-20T03:59:28.736Z",
+      "createdAt": "2026-10-20T03:58:28.564Z",
+      "updatedAt": "2026-10-20T03:59:28.736Z"
+    },
+    {
+      "id": "7e92c237-363e-48b0-b711-ac7098693b8c",
+      "roomCode": "room-1792470677225-z43ls",
+      "mode": "PVE_AI",
+      "status": "COMPLETED",
+      "redPlayerId": "0aefabae-d1f8-47d5-8b7f-6a06515466f6",
+      "blackPlayerId": null,
+      "aiDifficulty": "MEDIUM",
+      "winnerSide": "BLACK",
+      "winnerUserId": null,
+      "endReason": "CHECKMATE",
+      "initialFen": "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w - - 0 1",
+      "finalFen": "r1bakabnr/9/2n6/p1p1p1C1p/4c4/2P6/P1C1c1P1P/9/9/RNBAKABNR w - - 3 6",
+      "moveHistoryJson": [
+        {
+          "from": {
+            "row": 7,
+            "col": 1
+          },
+          "to": {
+            "row": 6,
+            "col": 1
+          },
+          "piece": {
+            "type": "c",
+            "side": "w",
+            "fenChar": "C"
+          },
+          "captured": null,
+          "iccs": "b2b3",
+          "wxf": "C8+1",
+          "vietnameseNotation": "Pháo 8 tiến 1",
+          "fenBefore": "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w - - 0 1",
+          "fenAfter": "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/PCP1P1P1P/7C1/9/RNBAKABNR b - - 1 1",
+          "zobristHashAfter": "ef32202c8075f805",
+          "isCheck": false,
+          "isCheckmate": false,
+          "isStalemate": false,
+          "isThreefoldRepetition": false,
+          "halfMoveClock": 1,
+          "fullMoveNumber": 1,
+          "timestamp": 1792470688569,
+          "redTimeLeftMs": 1788658,
+          "blackTimeLeftMs": 1800000
+        },
+        {
+          "from": {
+            "row": 0,
+            "col": 1
+          },
+          "to": {
+            "row": 2,
+            "col": 2
+          },
+          "piece": {
+            "type": "n",
+            "side": "b",
+            "fenChar": "n"
+          },
+          "captured": null,
+          "iccs": "b9c7",
+          "wxf": "N2+3",
+          "vietnameseNotation": "Mã 2 tiến 3",
+          "fenBefore": "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/PCP1P1P1P/7C1/9/RNBAKABNR b - - 1 1",
+          "fenAfter": "r1bakabnr/9/1cn4c1/p1p1p1p1p/9/9/PCP1P1P1P/7C1/9/RNBAKABNR w - - 2 2",
+          "zobristHashAfter": "3b75114634e42435",
+          "isCheck": false,
+          "isCheckmate": false,
+          "isStalemate": false,
+          "isThreefoldRepetition": false,
+          "halfMoveClock": 2,
+          "fullMoveNumber": 2,
+          "timestamp": 1792470688654,
+          "redTimeLeftMs": 1788658,
+          "blackTimeLeftMs": 1799915
+        },
+        {
+          "from": {
+            "row": 6,
+            "col": 2
+          },
+          "to": {
+            "row": 5,
+            "col": 2
+          },
+          "piece": {
+            "type": "p",
+            "side": "w",
+            "fenChar": "P"
+          },
+          "captured": null,
+          "iccs": "c3c4",
+          "wxf": "P7+1",
+          "vietnameseNotation": "Tốt 7 tiến 1",
+          "fenBefore": "r1bakabnr/9/1cn4c1/p1p1p1p1p/9/9/PCP1P1P1P/7C1/9/RNBAKABNR w - - 2 2",
+          "fenAfter": "r1bakabnr/9/1cn4c1/p1p1p1p1p/9/2P6/PC2P1P1P/7C1/9/RNBAKABNR b - - 0 2",
+          "zobristHashAfter": "8b7d3bc467e633dc",
+          "isCheck": false,
+          "isCheckmate": false,
+          "isStalemate": false,
+          "isThreefoldRepetition": false,
+          "halfMoveClock": 0,
+          "fullMoveNumber": 2,
+          "timestamp": 1792470693779,
+          "redTimeLeftMs": 1783534,
+          "blackTimeLeftMs": 1799915
+        },
+        {
+          "from": {
+            "row": 2,
+            "col": 7
+          },
+          "to": {
+            "row": 6,
+            "col": 7
+          },
+          "piece": {
+            "type": "c",
+            "side": "b",
+            "fenChar": "c"
+          },
+          "captured": null,
+          "iccs": "h7h3",
+          "wxf": "C8+4",
+          "vietnameseNotation": "Pháo 8 tiến 4",
+          "fenBefore": "r1bakabnr/9/1cn4c1/p1p1p1p1p/9/2P6/PC2P1P1P/7C1/9/RNBAKABNR b - - 0 2",
+          "fenAfter": "r1bakabnr/9/1cn6/p1p1p1p1p/9/2P6/PC2P1PcP/7C1/9/RNBAKABNR w - - 1 3",
+          "zobristHashAfter": "2c14f079a5e44d08",
+          "isCheck": false,
+          "isCheckmate": false,
+          "isStalemate": false,
+          "isThreefoldRepetition": false,
+          "halfMoveClock": 1,
+          "fullMoveNumber": 3,
+          "timestamp": 1792470693842,
+          "redTimeLeftMs": 1783534,
+          "blackTimeLeftMs": 1799852
+        },
+        {
+          "from": {
+            "row": 7,
+            "col": 7
+          },
+          "to": {
+            "row": 7,
+            "col": 6
+          },
+          "piece": {
+            "type": "c",
+            "side": "w",
+            "fenChar": "C"
+          },
+          "captured": null,
+          "iccs": "h2g2",
+          "wxf": "C2.3",
+          "vietnameseNotation": "Pháo 2 bình 3",
+          "fenBefore": "r1bakabnr/9/1cn6/p1p1p1p1p/9/2P6/PC2P1PcP/7C1/9/RNBAKABNR w - - 1 3",
+          "fenAfter": "r1bakabnr/9/1cn6/p1p1p1p1p/9/2P6/PC2P1PcP/6C2/9/RNBAKABNR b - - 2 3",
+          "zobristHashAfter": "9a26f2a1085378d0",
+          "isCheck": false,
+          "isCheckmate": false,
+          "isStalemate": false,
+          "isThreefoldRepetition": false,
+          "halfMoveClock": 2,
+          "fullMoveNumber": 3,
+          "timestamp": 1792470697505,
+          "redTimeLeftMs": 1779871,
+          "blackTimeLeftMs": 1799852
+        },
+        {
+          "from": {
+            "row": 6,
+            "col": 7
+          },
+          "to": {
+            "row": 6,
+            "col": 4
+          },
+          "piece": {
+            "type": "c",
+            "side": "b",
+            "fenChar": "c"
+          },
+          "captured": {
+            "type": "p",
+            "side": "w",
+            "fenChar": "P"
+          },
+          "iccs": "h3e3",
+          "wxf": "C8.5",
+          "vietnameseNotation": "Pháo 8 bình 5",
+          "fenBefore": "r1bakabnr/9/1cn6/p1p1p1p1p/9/2P6/PC2P1PcP/6C2/9/RNBAKABNR b - - 2 3",
+          "fenAfter": "r1bakabnr/9/1cn6/p1p1p1p1p/9/2P6/PC2c1P1P/6C2/9/RNBAKABNR w - - 0 4",
+          "zobristHashAfter": "50004feee73c19b4",
+          "isCheck": false,
+          "isCheckmate": false,
+          "isStalemate": false,
+          "isThreefoldRepetition": false,
+          "halfMoveClock": 0,
+          "fullMoveNumber": 4,
+          "timestamp": 1792470697533,
+          "redTimeLeftMs": 1779871,
+          "blackTimeLeftMs": 1799824
+        },
+        {
+          "from": {
+            "row": 7,
+            "col": 6
+          },
+          "to": {
+            "row": 3,
+            "col": 6
+          },
+          "piece": {
+            "type": "c",
+            "side": "w",
+            "fenChar": "C"
+          },
+          "captured": {
+            "type": "p",
+            "side": "b",
+            "fenChar": "p"
+          },
+          "iccs": "g2g6",
+          "wxf": "C3+4",
+          "vietnameseNotation": "Pháo 3 tiến 4",
+          "fenBefore": "r1bakabnr/9/1cn6/p1p1p1p1p/9/2P6/PC2c1P1P/6C2/9/RNBAKABNR w - - 0 4",
+          "fenAfter": "r1bakabnr/9/1cn6/p1p1p1C1p/9/2P6/PC2c1P1P/9/9/RNBAKABNR b - - 0 4",
+          "zobristHashAfter": "2b9da080e62a6e07",
+          "isCheck": false,
+          "isCheckmate": false,
+          "isStalemate": false,
+          "isThreefoldRepetition": false,
+          "halfMoveClock": 0,
+          "fullMoveNumber": 4,
+          "timestamp": 1792470703726,
+          "redTimeLeftMs": 1773678,
+          "blackTimeLeftMs": 1799824
+        },
+        {
+          "from": {
+            "row": 2,
+            "col": 1
+          },
+          "to": {
+            "row": 4,
+            "col": 1
+          },
+          "piece": {
+            "type": "c",
+            "side": "b",
+            "fenChar": "c"
+          },
+          "captured": null,
+          "iccs": "b7b5",
+          "wxf": "C2+2",
+          "vietnameseNotation": "Pháo 2 tiến 2",
+          "fenBefore": "r1bakabnr/9/1cn6/p1p1p1C1p/9/2P6/PC2c1P1P/9/9/RNBAKABNR b - - 0 4",
+          "fenAfter": "r1bakabnr/9/2n6/p1p1p1C1p/1c7/2P6/PC2c1P1P/9/9/RNBAKABNR w - - 1 5",
+          "zobristHashAfter": "48a43dade7addab7",
+          "isCheck": false,
+          "isCheckmate": false,
+          "isStalemate": false,
+          "isThreefoldRepetition": false,
+          "halfMoveClock": 1,
+          "fullMoveNumber": 5,
+          "timestamp": 1792470703755,
+          "redTimeLeftMs": 1773678,
+          "blackTimeLeftMs": 1799795
+        },
+        {
+          "from": {
+            "row": 6,
+            "col": 1
+          },
+          "to": {
+            "row": 6,
+            "col": 2
+          },
+          "piece": {
+            "type": "c",
+            "side": "w",
+            "fenChar": "C"
+          },
+          "captured": null,
+          "iccs": "b3c3",
+          "wxf": "C8.7",
+          "vietnameseNotation": "Pháo 8 bình 7",
+          "fenBefore": "r1bakabnr/9/2n6/p1p1p1C1p/1c7/2P6/PC2c1P1P/9/9/RNBAKABNR w - - 1 5",
+          "fenAfter": "r1bakabnr/9/2n6/p1p1p1C1p/1c7/2P6/P1C1c1P1P/9/9/RNBAKABNR b - - 2 5",
+          "zobristHashAfter": "6b9ab0df73b59f69",
+          "isCheck": false,
+          "isCheckmate": false,
+          "isStalemate": false,
+          "isThreefoldRepetition": false,
+          "halfMoveClock": 2,
+          "fullMoveNumber": 5,
+          "timestamp": 1792470707476,
+          "redTimeLeftMs": 1769958,
+          "blackTimeLeftMs": 1799795
+        },
+        {
+          "from": {
+            "row": 4,
+            "col": 1
+          },
+          "to": {
+            "row": 4,
+            "col": 4
+          },
+          "piece": {
+            "type": "c",
+            "side": "b",
+            "fenChar": "c"
+          },
+          "captured": null,
+          "iccs": "b5e5",
+          "wxf": "C2.5",
+          "vietnameseNotation": "Pháo 2 bình 5",
+          "fenBefore": "r1bakabnr/9/2n6/p1p1p1C1p/1c7/2P6/P1C1c1P1P/9/9/RNBAKABNR b - - 2 5",
+          "fenAfter": "r1bakabnr/9/2n6/p1p1p1C1p/4c4/2P6/P1C1c1P1P/9/9/RNBAKABNR w - - 3 6",
+          "zobristHashAfter": "59adeca61bc2cecf",
+          "isCheck": true,
+          "isCheckmate": true,
+          "isStalemate": false,
+          "isThreefoldRepetition": false,
+          "halfMoveClock": 3,
+          "fullMoveNumber": 6,
+          "timestamp": 1792470707504,
+          "redTimeLeftMs": 1769958,
+          "blackTimeLeftMs": 1799767
+        }
+      ],
+      "moveHistoryWxf": "C8+1 N2+3 P7+1 C8+4 C2.3 C8.5 C3+4 C2+2 C8.7 C2.5",
+      "totalTimeMs": 1800000,
+      "turnTimeMs": 60000,
+      "redTimeLeftMs": 1769957,
+      "blackTimeLeftMs": 1799767,
+      "redEloBefore": null,
+      "blackEloBefore": null,
+      "redEloDelta": null,
+      "blackEloDelta": null,
+      "startedAt": "2026-10-20T04:31:17.225Z",
+      "endedAt": "2026-10-20T04:31:47.505Z",
+      "createdAt": "2026-10-20T04:31:17.225Z",
+      "updatedAt": "2026-10-20T04:31:47.505Z"
+    },
+    {
+      "id": "dfdfe42f-6dd3-4446-912d-b9d604683ac9",
+      "roomCode": "room-1792470790143-xbloj",
+      "mode": "PVE_AI",
+      "status": "COMPLETED",
+      "redPlayerId": "0aefabae-d1f8-47d5-8b7f-6a06515466f6",
+      "blackPlayerId": null,
+      "aiDifficulty": "EASY",
+      "winnerSide": "BLACK",
+      "winnerUserId": null,
+      "endReason": "TIMEOUT",
+      "initialFen": "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w - - 0 1",
+      "finalFen": "rnbakabnr/9/9/p1p1p1p1p/1C7/2c1P4/PR4P1P/7C1/9/2BAKABNR w - - 2 5",
+      "moveHistoryJson": [
+        {
+          "from": {
+            "row": 6,
+            "col": 4
+          },
+          "to": {
+            "row": 5,
+            "col": 4
+          },
+          "piece": {
+            "type": "p",
+            "side": "w",
+            "fenChar": "P"
+          },
+          "captured": null,
+          "iccs": "e3e4",
+          "wxf": "P5+1",
+          "vietnameseNotation": "Tốt 5 tiến 1",
+          "fenBefore": "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w - - 0 1",
+          "fenAfter": "rnbakabnr/9/1c5c1/p1p1p1p1p/9/4P4/P1P3P1P/1C5C1/9/RNBAKABNR b - - 0 1",
+          "zobristHashAfter": "dbecdbbab4a89c2f",
+          "isCheck": false,
+          "isCheckmate": false,
+          "isStalemate": false,
+          "isThreefoldRepetition": false,
+          "halfMoveClock": 0,
+          "fullMoveNumber": 1,
+          "timestamp": 1792470792032,
+          "redTimeLeftMs": 1798112,
+          "blackTimeLeftMs": 1800000
+        },
+        {
+          "from": {
+            "row": 2,
+            "col": 1
+          },
+          "to": {
+            "row": 9,
+            "col": 1
+          },
+          "piece": {
+            "type": "c",
+            "side": "b",
+            "fenChar": "c"
+          },
+          "captured": {
+            "type": "n",
+            "side": "w",
+            "fenChar": "N"
+          },
+          "iccs": "b7b0",
+          "wxf": "C2+7",
+          "vietnameseNotation": "Pháo 2 tiến 7",
+          "fenBefore": "rnbakabnr/9/1c5c1/p1p1p1p1p/9/4P4/P1P3P1P/1C5C1/9/RNBAKABNR b - - 0 1",
+          "fenAfter": "rnbakabnr/9/7c1/p1p1p1p1p/9/4P4/P1P3P1P/1C5C1/9/RcBAKABNR w - - 0 2",
+          "zobristHashAfter": "ba0785ef540cd363",
+          "isCheck": false,
+          "isCheckmate": false,
+          "isStalemate": false,
+          "isThreefoldRepetition": false,
+          "halfMoveClock": 0,
+          "fullMoveNumber": 2,
+          "timestamp": 1792470792038,
+          "redTimeLeftMs": 1798112,
+          "blackTimeLeftMs": 1799994
+        },
+        {
+          "from": {
+            "row": 9,
+            "col": 0
+          },
+          "to": {
+            "row": 9,
+            "col": 1
+          },
+          "piece": {
+            "type": "r",
+            "side": "w",
+            "fenChar": "R"
+          },
+          "captured": {
+            "type": "c",
+            "side": "b",
+            "fenChar": "c"
+          },
+          "iccs": "a0b0",
+          "wxf": "R9.8",
+          "vietnameseNotation": "Xe 9 bình 8",
+          "fenBefore": "rnbakabnr/9/7c1/p1p1p1p1p/9/4P4/P1P3P1P/1C5C1/9/RcBAKABNR w - - 0 2",
+          "fenAfter": "rnbakabnr/9/7c1/p1p1p1p1p/9/4P4/P1P3P1P/1C5C1/9/1RBAKABNR b - - 0 2",
+          "zobristHashAfter": "759a617908b0405f",
+          "isCheck": false,
+          "isCheckmate": false,
+          "isStalemate": false,
+          "isThreefoldRepetition": false,
+          "halfMoveClock": 0,
+          "fullMoveNumber": 2,
+          "timestamp": 1792470794155,
+          "redTimeLeftMs": 1795996,
+          "blackTimeLeftMs": 1799994
+        },
+        {
+          "from": {
+            "row": 2,
+            "col": 7
+          },
+          "to": {
+            "row": 2,
+            "col": 2
+          },
+          "piece": {
+            "type": "c",
+            "side": "b",
+            "fenChar": "c"
+          },
+          "captured": null,
+          "iccs": "h7c7",
+          "wxf": "C8.3",
+          "vietnameseNotation": "Pháo 8 bình 3",
+          "fenBefore": "rnbakabnr/9/7c1/p1p1p1p1p/9/4P4/P1P3P1P/1C5C1/9/1RBAKABNR b - - 0 2",
+          "fenAfter": "rnbakabnr/9/2c6/p1p1p1p1p/9/4P4/P1P3P1P/1C5C1/9/1RBAKABNR w - - 1 3",
+          "zobristHashAfter": "a8c81bab412a5794",
+          "isCheck": false,
+          "isCheckmate": false,
+          "isStalemate": false,
+          "isThreefoldRepetition": false,
+          "halfMoveClock": 1,
+          "fullMoveNumber": 3,
+          "timestamp": 1792470794159,
+          "redTimeLeftMs": 1795996,
+          "blackTimeLeftMs": 1799990
+        },
+        {
+          "from": {
+            "row": 7,
+            "col": 1
+          },
+          "to": {
+            "row": 4,
+            "col": 1
+          },
+          "piece": {
+            "type": "c",
+            "side": "w",
+            "fenChar": "C"
+          },
+          "captured": null,
+          "iccs": "b2b5",
+          "wxf": "C8+3",
+          "vietnameseNotation": "Pháo 8 tiến 3",
+          "fenBefore": "rnbakabnr/9/2c6/p1p1p1p1p/9/4P4/P1P3P1P/1C5C1/9/1RBAKABNR w - - 1 3",
+          "fenAfter": "rnbakabnr/9/2c6/p1p1p1p1p/1C7/4P4/P1P3P1P/7C1/9/1RBAKABNR b - - 2 3",
+          "zobristHashAfter": "b3480dd430437fb3",
+          "isCheck": false,
+          "isCheckmate": false,
+          "isStalemate": false,
+          "isThreefoldRepetition": false,
+          "halfMoveClock": 2,
+          "fullMoveNumber": 3,
+          "timestamp": 1792470797633,
+          "redTimeLeftMs": 1792523,
+          "blackTimeLeftMs": 1799990
+        },
+        {
+          "from": {
+            "row": 2,
+            "col": 2
+          },
+          "to": {
+            "row": 6,
+            "col": 2
+          },
+          "piece": {
+            "type": "c",
+            "side": "b",
+            "fenChar": "c"
+          },
+          "captured": {
+            "type": "p",
+            "side": "w",
+            "fenChar": "P"
+          },
+          "iccs": "c7c3",
+          "wxf": "C3+4",
+          "vietnameseNotation": "Pháo 3 tiến 4",
+          "fenBefore": "rnbakabnr/9/2c6/p1p1p1p1p/1C7/4P4/P1P3P1P/7C1/9/1RBAKABNR b - - 2 3",
+          "fenAfter": "rnbakabnr/9/9/p1p1p1p1p/1C7/4P4/P1c3P1P/7C1/9/1RBAKABNR w - - 0 4",
+          "zobristHashAfter": "ae8cfe9d1f320e41",
+          "isCheck": false,
+          "isCheckmate": false,
+          "isStalemate": false,
+          "isThreefoldRepetition": false,
+          "halfMoveClock": 0,
+          "fullMoveNumber": 4,
+          "timestamp": 1792470797637,
+          "redTimeLeftMs": 1792523,
+          "blackTimeLeftMs": 1799986
+        },
+        {
+          "from": {
+            "row": 9,
+            "col": 1
+          },
+          "to": {
+            "row": 6,
+            "col": 1
+          },
+          "piece": {
+            "type": "r",
+            "side": "w",
+            "fenChar": "R"
+          },
+          "captured": null,
+          "iccs": "b0b3",
+          "wxf": "R8+3",
+          "vietnameseNotation": "Xe 8 tiến 3",
+          "fenBefore": "rnbakabnr/9/9/p1p1p1p1p/1C7/4P4/P1c3P1P/7C1/9/1RBAKABNR w - - 0 4",
+          "fenAfter": "rnbakabnr/9/9/p1p1p1p1p/1C7/4P4/PRc3P1P/7C1/9/2BAKABNR b - - 1 4",
+          "zobristHashAfter": "3e221efa840bc8d4",
+          "isCheck": false,
+          "isCheckmate": false,
+          "isStalemate": false,
+          "isThreefoldRepetition": false,
+          "halfMoveClock": 1,
+          "fullMoveNumber": 4,
+          "timestamp": 1792470804458,
+          "redTimeLeftMs": 1785703,
+          "blackTimeLeftMs": 1799986
+        },
+        {
+          "from": {
+            "row": 6,
+            "col": 2
+          },
+          "to": {
+            "row": 5,
+            "col": 2
+          },
+          "piece": {
+            "type": "c",
+            "side": "b",
+            "fenChar": "c"
+          },
+          "captured": null,
+          "iccs": "c3c4",
+          "wxf": "C3-1",
+          "vietnameseNotation": "Pháo 3 thoái 1",
+          "fenBefore": "rnbakabnr/9/9/p1p1p1p1p/1C7/4P4/PRc3P1P/7C1/9/2BAKABNR b - - 1 4",
+          "fenAfter": "rnbakabnr/9/9/p1p1p1p1p/1C7/2c1P4/PR4P1P/7C1/9/2BAKABNR w - - 2 5",
+          "zobristHashAfter": "e33c23ad1303772e",
+          "isCheck": false,
+          "isCheckmate": false,
+          "isStalemate": false,
+          "isThreefoldRepetition": false,
+          "halfMoveClock": 2,
+          "fullMoveNumber": 5,
+          "timestamp": 1792470804464,
+          "redTimeLeftMs": 1785703,
+          "blackTimeLeftMs": 1799980
+        }
+      ],
+      "moveHistoryWxf": "P5+1 C2+7 R9.8 C8.3 C8+3 C3+4 R8+3 C3-1",
+      "totalTimeMs": 1800000,
+      "turnTimeMs": 60000,
+      "redTimeLeftMs": 1725479,
+      "blackTimeLeftMs": 1799980,
+      "redEloBefore": null,
+      "blackEloBefore": null,
+      "redEloDelta": null,
+      "blackEloDelta": null,
+      "startedAt": "2026-10-20T04:33:10.143Z",
+      "endedAt": "2026-10-20T04:34:24.689Z",
+      "createdAt": "2026-10-20T04:33:10.143Z",
+      "updatedAt": "2026-10-20T04:34:24.689Z"
+    }
+  ],
+  "savedGames": []
+}

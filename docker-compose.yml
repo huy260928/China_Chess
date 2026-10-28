@@ -1,0 +1,74 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: xiangqi-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-xiangqi}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-xiangqi_secret}
+      POSTGRES_DB: ${POSTGRES_DB:-xiangqi_db}
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-xiangqi} -d ${POSTGRES_DB:-xiangqi_db}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: xiangqi-redis
+    restart: unless-stopped
+    command: ['redis-server', '--appendonly', 'yes']
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  server:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    container_name: xiangqi-server
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      DATABASE_URL: postgresql://${POSTGRES_USER:-xiangqi}:${POSTGRES_PASSWORD:-xiangqi_secret}@postgres:5432/${POSTGRES_DB:-xiangqi_db}?schema=public
+      REDIS_URL: redis://redis:6379
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-xiangqi-enterprise-access-secret-prod-2026}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-xiangqi-enterprise-refresh-secret-prod-2026}
+      ACCESS_TOKEN_EXPIRES_IN: 15m
+      REFRESH_TOKEN_TTL_DAYS: 7
+      CLIENT_ORIGIN: ${CLIENT_ORIGIN:-http://localhost}
+    ports:
+      - '4000:4000'
+
+  client:
+    build:
+      context: .
+      dockerfile: client/Dockerfile
+    container_name: xiangqi-client
+    restart: unless-stopped
+    depends_on:
+      - server
+    ports:
+      - '80:80'
+
+volumes:
+  postgres_data:
+  redis_data:

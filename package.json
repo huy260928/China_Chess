@@ -1,0 +1,27 @@
+{
+  "name": "xiangqi-enterprise-platform",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Production-grade Real-time Multiplayer Xiangqi (Chinese Chess) Enterprise Platform",
+  "workspaces": [
+    "shared",
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "build:shared": "npm --workspace=shared run build",
+    "build:server": "npm --workspace=server run build",
+    "build:client": "npm --workspace=client run build",
+    "build": "npm run build:shared && npm run build:server && npm run build:client",
+    "dev:server": "npm --workspace=server run dev",
+    "dev:client": "npm --workspace=client run dev",
+    "test:shared": "npm --workspace=shared run test",
+    "test:server": "npm --workspace=server run test",
+    "test": "npm run test:shared && npm run test:server",
+    "prisma:generate": "npm --workspace=server run prisma:generate",
+    "prisma:migrate": "npm --workspace=server run prisma:migrate"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
