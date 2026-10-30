@@ -30,6 +30,7 @@ import { GameClock } from './components/GameClock';
 import { MoveHistoryReplay } from './components/MoveHistoryReplay';
 import { DualChatPanel } from './components/DualChatPanel';
 import { SavedGamesModal } from './components/SavedGamesModal';
+import { VideoCallPanel } from './components/VideoCallPanel';
 
 export const App: React.FC = () => {
   const {
@@ -94,13 +95,15 @@ export const App: React.FC = () => {
     fetchLeaderboard();
   }, [initSession, fetchLeaderboard]);
 
+  const currentUserId = user?.id ?? null;
+
   useEffect(() => {
-    if (accessToken && user) {
+    if (accessToken && currentUserId) {
       connectSocket(accessToken);
     } else {
       disconnectSocket();
     }
-  }, [accessToken, user, connectSocket, disconnectSocket]);
+  }, [accessToken, currentUserId, connectSocket, disconnectSocket]);
 
   useEffect(() => {
     if (!toastBanner) return;
@@ -121,7 +124,7 @@ export const App: React.FC = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-stone-950 text-amber-400 gap-2 font-bold">
         <Loader2 className="w-6 h-6 animate-spin" />
-        Đang khởi tạo Kỳ Vương Điện...
+        Đang khởi tạo Cờ Tướng...
       </div>
     );
   }
@@ -138,7 +141,7 @@ export const App: React.FC = () => {
               帥
             </div>
             <h1 className="text-2xl font-extrabold text-stone-100 tracking-wide">
-              KỲ VƯƠNG ĐIỆN
+              CỜ TƯỚNG
             </h1>
             <p className="text-xs text-stone-400 mt-1">
               Hệ thống Cờ Tướng Trực Tuyến Chuẩn Quốc Tế (Server-Authoritative)
@@ -236,7 +239,7 @@ export const App: React.FC = () => {
           </div>
           <div>
             <h1 className="font-extrabold text-base tracking-wide text-stone-100">
-              KỲ VƯƠNG ĐIỆN
+              CỜ TƯỚNG
             </h1>
             <div className="flex items-center gap-2 text-[11px] text-stone-400">
               <span className="inline-flex items-center gap-1">
@@ -318,7 +321,10 @@ export const App: React.FC = () => {
             {/* Top of Right Column: Dual-Channel Real-Time Chat */}
             <DualChatPanel />
 
-            {/* Below Chat: Player Identities & 30-Minute Authoritative Clocks */}
+            {/* 1v1 P2P WebRTC Video / Voice Call (Strictly Online PvP Opponents Only) */}
+            <VideoCallPanel />
+
+            {/* Below Chat & Video Call: Player Identities & 30-Minute Authoritative Clocks */}
             <GameClock />
 
             {/* Incoming Draw Offer Prompt */}
@@ -566,10 +572,10 @@ export const App: React.FC = () => {
                         }`}
                       >
                         {lvl === 'EASY'
-                          ? 'Dễ (d=2)'
+                          ? 'Dễ'
                           : lvl === 'MEDIUM'
-                            ? 'Vừa (d=4)'
-                            : 'Khó (d=6)'}
+                            ? 'Trung Bình'
+                            : 'Khó'}
                       </button>
                     ))}
                   </div>

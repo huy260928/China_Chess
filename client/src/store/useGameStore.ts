@@ -87,7 +87,9 @@ interface GameStoreState {
   clearToast: () => void;
 }
 
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || window.location.origin;
+const SOCKET_URL =
+  import.meta.env.VITE_SOCKET_URL ||
+  (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3001');
 
 let pingIntervalHandle: ReturnType<typeof setInterval> | null = null;
 
@@ -180,6 +182,19 @@ export const useGameStore = create<GameStoreState>((set, get) => ({
     socket.on('move_made', (payload) => {
       const currentRoom = get().roomState;
       if (!currentRoom) return;
+
+      // Guard against duplicate move packet delivery
+      if (
+        currentRoom.fen === payload.fen &&
+        currentRoom.lastMove &&
+        currentRoom.lastMove.fenAfter === payload.move.fenAfter &&
+        currentRoom.lastMove.from.row === payload.move.from.row &&
+        currentRoom.lastMove.from.col === payload.move.from.col &&
+        currentRoom.lastMove.to.row === payload.move.to.row &&
+        currentRoom.lastMove.to.col === payload.move.to.col
+      ) {
+        return;
+      }
 
       const updatedHistory = [...currentRoom.moveHistory, payload.move];
       set({

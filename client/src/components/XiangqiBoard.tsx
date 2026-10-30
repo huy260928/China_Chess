@@ -2,8 +2,9 @@
 // XIANGQI ENTERPRISE PLATFORM - HIGH-PRECISION INTERACTIVE SVG XIANGQI BOARD
 // Supports:
 // - 180-Degree Flip Board Coordinate Transform: (x, y) -> (8 - x, 9 - y)
-// - Smooth Human-Visible Piece Glide Animation (700ms cubic-bezier trajectory)
-// - Last Move Origin/Destination Highlights & Motion Trail
+// - Timestamp-Driven 1.0s (1000ms) Pure SVG User-Space Piece Glide Animation
+//   (Immune to clock_sync ticks, React.StrictMode double-effects, and tab throttling)
+// - Last Move Origin/Destination Highlights & Motion Trajectory Line
 // - Valid Move Suggestion Dots & Capture Target Rings
 // - In-Check General Pulsing Alert
 // - Live Mode & Historical Step-by-Step Replay Mode
@@ -26,7 +27,7 @@ const CELL_SIZE = 64;
 const PADDING = 48;
 const BOARD_WIDTH = (BOARD_COLS - 1) * CELL_SIZE + PADDING * 2;
 const BOARD_HEIGHT = (BOARD_ROWS - 1) * CELL_SIZE + PADDING * 2;
-const MOVE_ANIMATION_MS = 1000; // 1.0s (1000ms) slow, clear piece movement for the entire board
+const MOVE_ANIMATION_MS = 1000; // 1.0s (1000ms) smooth piece movement across the board
 
 const HANZI_LABELS: Record<FenPieceChar, string> = {
   K: '帥',
@@ -81,12 +82,20 @@ const MARKER_COORDS: Coordinates[] = [
   { row: 6, col: 8 },
 ];
 
-interface PieceGlideAnimation {
-  moveKey: string;
+interface ActiveGlideState {
+  signature: string;
   from: Coordinates;
   to: Coordinates;
   captured: Piece | null;
-  phase: 'from' | 'sliding' | 'done';
+  progress: number; // 0.0 -> 1.0
+}
+
+interface GlideTimingRecord {
+  signature: string;
+  startTs: number;
+  from: Coordinates;
+  to: Coordinates;
+  captured: Piece | null;
 }
 
 export const XiangqiBoard: React.FC = () => {
@@ -101,26 +110,39 @@ export const XiangqiBoard: React.FC = () => {
   } = useGameStore();
 
   const [useVietnameseChars, setUseVietnameseChars] = useState(false);
-  const [glideAnim, setGlideAnim] = useState<PieceGlideAnimation | null>(null);
-  const lastAnimatedMoveKeyRef = useRef<string | null>(null);
+  const [activeGlide, setActiveGlide] = useState<ActiveGlideState | null>(null);
 
-  // Determine active FEN and lastMove based on Live vs Replay mode
+  const committedSigRef = useRef<string | null>(null);
+  const animTimingRef = useRef<GlideTimingRecord | null>(null);
+
+  // Extract narrow board-only fields so periodic `clock_sync` ticks never
+  // invalidate board memoization or interrupt active move animations.
+  const roomId = roomState?.roomId ?? null;
+  const liveFen = roomState?.fen ?? null;
+  const initialFen = roomState?.initialFen ?? null;
+  const liveLastMove = roomState?.lastMove ?? null;
+  const liveInCheck = roomState?.inCheck ?? false;
+  const liveCheckedPos = roomState?.checkedGeneralPos ?? null;
+  const moveHistory = roomState?.moveHistory;
+  const moveCount = moveHistory?.length ?? 0;
+
+  // Determine active board, lastMove, and primitive stepSignature
   const displayState = useMemo(() => {
-    if (!roomState) return null;
+    if (!roomId || !liveFen || !initialFen) return null;
 
     if (replayStepIndex !== null) {
       if (replayStepIndex < 0) {
-        const engine = new XiangqiEngine(roomState.initialFen);
+        const engine = new XiangqiEngine(initialFen);
         return {
           board: engine.getBoard(),
           lastMove: null,
           inCheck: false,
           checkedGeneralPos: null,
           isReplay: true,
-          stepSignature: `replay-init`,
+          stepSignature: `${roomId}:replay-init`,
         };
       }
-      const stepMove = roomState.moveHistory[replayStepIndex];
+      const stepMove = moveHistory?.[replayStepIndex];
       if (stepMove) {
         const engine = new XiangqiEngine(stepMove.fenAfter);
         const inCheck = engine.isInCheck();
@@ -130,71 +152,130 @@ export const XiangqiBoard: React.FC = () => {
           inCheck,
           checkedGeneralPos: inCheck ? engine.findGeneral(engine.getTurn()) : null,
           isReplay: true,
-          stepSignature: `replay-${replayStepIndex}-${stepMove.from.row},${stepMove.from.col}->${stepMove.to.row},${stepMove.to.col}`,
+          stepSignature: `${roomId}:replay-${replayStepIndex}-${stepMove.from.row},${stepMove.from.col}->${stepMove.to.row},${stepMove.to.col}`,
         };
       }
     }
 
-    const engine = new XiangqiEngine(roomState.fen);
-    const lm = roomState.lastMove;
+    const engine = new XiangqiEngine(liveFen);
     return {
       board: engine.getBoard(),
-      lastMove: lm,
-      inCheck: roomState.inCheck,
-      checkedGeneralPos: roomState.checkedGeneralPos,
+      lastMove: liveLastMove,
+      inCheck: liveInCheck,
+      checkedGeneralPos: liveCheckedPos,
       isReplay: false,
-      stepSignature: lm
-        ? `live-${roomState.moveHistory.length}-${lm.from.row},${lm.from.col}->${lm.to.row},${lm.to.col}`
-        : 'live-start',
+      stepSignature:
+        liveLastMove && moveCount > 0
+          ? `${roomId}:live-${moveCount}-${liveLastMove.from.row},${liveLastMove.from.col}->${liveLastMove.to.row},${liveLastMove.to.col}`
+          : `${roomId}:live-0`,
     };
-  }, [roomState, replayStepIndex]);
+  }, [
+    roomId,
+    liveFen,
+    initialFen,
+    liveLastMove,
+    liveInCheck,
+    liveCheckedPos,
+    moveHistory,
+    moveCount,
+    replayStepIndex,
+  ]);
 
-  // Trigger smooth 700ms piece glide animation whenever a new move occurs
+  const stepSignature = displayState?.stepSignature ?? null;
+  const latestLastMoveRef = useRef(displayState?.lastMove ?? null);
+  latestLastMoveRef.current = displayState?.lastMove ?? null;
+
+  // Timestamp-driven 1.0s animation loop keyed strictly on primitive `stepSignature`.
+  // Safe under React.StrictMode double-invocation, `clock_sync` updates, and background tabs.
   useEffect(() => {
-    if (!displayState || !displayState.lastMove) {
-      setGlideAnim(null);
+    if (!stepSignature || !roomId) {
+      committedSigRef.current = null;
+      animTimingRef.current = null;
+      setActiveGlide(null);
       return;
     }
 
-    const { lastMove, stepSignature } = displayState;
-    if (lastAnimatedMoveKeyRef.current === stepSignature) {
+    // First mount into this room: synchronize without replaying historical last move
+    if (
+      committedSigRef.current === null ||
+      !committedSigRef.current.startsWith(`${roomId}:`)
+    ) {
+      committedSigRef.current = stepSignature;
+      animTimingRef.current = null;
+      setActiveGlide(null);
       return;
     }
-    lastAnimatedMoveKeyRef.current = stepSignature;
 
-    setGlideAnim({
-      moveKey: stepSignature,
-      from: lastMove.from,
-      to: lastMove.to,
-      captured: lastMove.captured ?? null,
-      phase: 'from',
-    });
+    // New move or replay step occurred in the current room
+    if (committedSigRef.current !== stepSignature) {
+      committedSigRef.current = stepSignature;
+      const lm = latestLastMoveRef.current;
+      if (lm) {
+        animTimingRef.current = {
+          signature: stepSignature,
+          startTs: Date.now(),
+          from: { ...lm.from },
+          to: { ...lm.to },
+          captured: lm.captured ? { ...lm.captured } : null,
+        };
+      } else {
+        animTimingRef.current = null;
+        setActiveGlide(null);
+        return;
+      }
+    }
 
-    let raf2: number;
-    const raf1 = requestAnimationFrame(() => {
-      raf2 = requestAnimationFrame(() => {
-        setGlideAnim((prev) =>
-          prev && prev.moveKey === stepSignature
-            ? { ...prev, phase: 'sliding' }
-            : prev
-        );
-      });
-    });
+    const timing = animTimingRef.current;
+    if (!timing || timing.signature !== stepSignature) {
+      return;
+    }
 
-    const doneTimer = setTimeout(() => {
-      setGlideAnim((prev) =>
-        prev && prev.moveKey === stepSignature ? { ...prev, phase: 'done' } : prev
-      );
-    }, MOVE_ANIMATION_MS + 40);
+    let rafId = 0;
+    let isCancelled = false;
+
+    const finishAnimation = () => {
+      if (isCancelled) return;
+      if (animTimingRef.current?.signature === stepSignature) {
+        animTimingRef.current = null;
+      }
+      setActiveGlide(null);
+    };
+
+    const tick = () => {
+      if (isCancelled) return;
+      const elapsed = Math.max(0, Date.now() - timing.startTs);
+      const progress = Math.min(1, elapsed / MOVE_ANIMATION_MS);
+
+      if (progress < 1) {
+        setActiveGlide({
+          signature: timing.signature,
+          from: timing.from,
+          to: timing.to,
+          captured: timing.captured,
+          progress,
+        });
+        rafId = requestAnimationFrame(tick);
+      } else {
+        finishAnimation();
+      }
+    };
+
+    // Start frame immediately; also set a wall-clock timeout fallback so background
+    // browser tabs (where requestAnimationFrame is paused by Chromium) still complete cleanly.
+    tick();
+    const fallbackTimer = setTimeout(
+      finishAnimation,
+      Math.max(0, MOVE_ANIMATION_MS - (Date.now() - timing.startTs)) + 60
+    );
 
     return () => {
-      cancelAnimationFrame(raf1);
-      if (raf2) cancelAnimationFrame(raf2);
-      clearTimeout(doneTimer);
+      isCancelled = true;
+      if (rafId) cancelAnimationFrame(rafId);
+      clearTimeout(fallbackTimer);
     };
-  }, [displayState]);
+  }, [stepSignature, roomId]);
 
-  // Maps logical board (row, col) -> visual screen (x, y) with 180° Flip Board support
+  // Maps logical board (row, col) -> visual SVG user-space (x, y) with 180° Flip Board support
   const toScreenXY = (row: number, col: number): { x: number; y: number } => {
     const visualCol = isFlipped ? 8 - col : col;
     const visualRow = isFlipped ? 9 - row : row;
@@ -271,7 +352,9 @@ export const XiangqiBoard: React.FC = () => {
         <circle
           r={26}
           fill={isRed ? 'url(#redPieceGrad)' : 'url(#blackPieceGrad)'}
-          stroke={isSelected || isGliding ? '#f59e0b' : isRed ? '#991b1b' : '#1c1917'}
+          stroke={
+            isSelected || isGliding ? '#f59e0b' : isRed ? '#991b1b' : '#1c1917'
+          }
           strokeWidth={isSelected || isGliding ? '3.2' : '2.5'}
         />
         <circle
@@ -293,6 +376,92 @@ export const XiangqiBoard: React.FC = () => {
       </>
     );
   };
+
+  // Check if there is an in-progress glide matching the current board state
+  const currentGlide =
+    activeGlide &&
+    activeGlide.signature === displayState.stepSignature &&
+    activeGlide.progress < 1
+      ? activeGlide
+      : null;
+
+  const glideEased = currentGlide
+    ? 1 - Math.pow(1 - currentGlide.progress, 3)
+    : 1;
+
+  // Build list of all pieces currently on `displayState.board` so NO piece is EVER omitted.
+  // The gliding piece (if any) is placed last so it renders on top of stationary pieces.
+  const stationaryPieces: Array<{
+    row: number;
+    col: number;
+    piece: Piece;
+    x: number;
+    y: number;
+    scale: number;
+    isSelected: boolean;
+    isGliding: boolean;
+  }> = [];
+
+  let glidingPieceRenderItem: {
+    row: number;
+    col: number;
+    piece: Piece;
+    x: number;
+    y: number;
+    scale: number;
+    isSelected: boolean;
+    isGliding: boolean;
+  } | null = null;
+
+  for (let r = 0; r < BOARD_ROWS; r++) {
+    for (let c = 0; c < BOARD_COLS; c++) {
+      const piece = displayState.board[r][c];
+      if (!piece) continue;
+
+      const isSelected =
+        selectedSquare?.row === r && selectedSquare?.col === c;
+
+      if (
+        currentGlide &&
+        currentGlide.to.row === r &&
+        currentGlide.to.col === c
+      ) {
+        const fromXY = toScreenXY(currentGlide.from.row, currentGlide.from.col);
+        const toXY = toScreenXY(r, c);
+        const interpX = fromXY.x + (toXY.x - fromXY.x) * glideEased;
+        const interpY = fromXY.y + (toXY.y - fromXY.y) * glideEased;
+        const liftScale =
+          1 + 0.12 * Math.sin(currentGlide.progress * Math.PI);
+
+        glidingPieceRenderItem = {
+          row: r,
+          col: c,
+          piece,
+          x: interpX,
+          y: interpY,
+          scale: liftScale,
+          isSelected,
+          isGliding: true,
+        };
+      } else {
+        const { x, y } = toScreenXY(r, c);
+        stationaryPieces.push({
+          row: r,
+          col: c,
+          piece,
+          x,
+          y,
+          scale: isSelected ? 1.08 : 1,
+          isSelected,
+          isGliding: false,
+        });
+      }
+    }
+  }
+
+  const allPiecesToRender = glidingPieceRenderItem
+    ? [...stationaryPieces, glidingPieceRenderItem]
+    : stationaryPieces;
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-center select-none">
@@ -352,7 +521,10 @@ export const XiangqiBoard: React.FC = () => {
         <svg
           viewBox={`0 0 ${BOARD_WIDTH} ${BOARD_HEIGHT}`}
           className="h-[calc(100vh-145px)] max-h-[720px] min-h-[460px] w-auto max-w-full rounded-xl shadow-inner"
-          style={{ backgroundColor: '#e6be8a', aspectRatio: `${BOARD_WIDTH} / ${BOARD_HEIGHT}` }}
+          style={{
+            backgroundColor: '#e6be8a',
+            aspectRatio: `${BOARD_WIDTH} / ${BOARD_HEIGHT}`,
+          }}
         >
           <defs>
             <radialGradient id="redPieceGrad" cx="35%" cy="30%" r="70%">
@@ -365,7 +537,7 @@ export const XiangqiBoard: React.FC = () => {
               <stop offset="65%" stopColor="#d6d3d1" />
               <stop offset="100%" stopColor="#57534e" />
             </radialGradient>
-            <filter id="pieceShadow" x="-20%" y="-20%" width="140%" height="140%">
+            <filter id="pieceShadow" x="-25%" y="-25%" width="150%" height="150%">
               <feDropShadow dx="0" dy="3" stdDeviation="2.5" floodOpacity="0.45" />
             </filter>
           </defs>
@@ -392,7 +564,9 @@ export const XiangqiBoard: React.FC = () => {
                 x2={PADDING + (BOARD_COLS - 1) * CELL_SIZE}
                 y2={y}
                 stroke="#4a2c11"
-                strokeWidth={r === 0 || r === 9 || r === 4 || r === 5 ? '2.2' : '1.4'}
+                strokeWidth={
+                  r === 0 || r === 9 || r === 4 || r === 5 ? '2.2' : '1.4'
+                }
               />
             );
           })}
@@ -544,7 +718,6 @@ export const XiangqiBoard: React.FC = () => {
               );
               return (
                 <>
-                  {/* Trajectory Path Line */}
                   <line
                     x1={fromXY.x}
                     y1={fromXY.y}
@@ -553,7 +726,7 @@ export const XiangqiBoard: React.FC = () => {
                     stroke="#d97706"
                     strokeWidth="3"
                     strokeDasharray="6,4"
-                    strokeOpacity="0.65"
+                    strokeOpacity="0.7"
                   />
                   {[fromXY, toXY].map((xy, idx) => (
                     <rect
@@ -580,7 +753,10 @@ export const XiangqiBoard: React.FC = () => {
           {/* Selected Piece Square Highlight */}
           {selectedSquare &&
             (() => {
-              const { x, y } = toScreenXY(selectedSquare.row, selectedSquare.col);
+              const { x, y } = toScreenXY(
+                selectedSquare.row,
+                selectedSquare.col
+              );
               return (
                 <circle
                   cx={x}
@@ -613,106 +789,43 @@ export const XiangqiBoard: React.FC = () => {
               );
             })()}
 
-          {/* Captured Piece Fade-Out Effect During 700ms Glide Animation */}
-          {glideAnim &&
-            glideAnim.phase !== 'done' &&
-            glideAnim.captured &&
+          {/* Captured Piece Fade-Out Effect During 1.0s Glide Animation */}
+          {currentGlide &&
+            currentGlide.captured &&
             (() => {
-              const { x, y } = toScreenXY(glideAnim.to.row, glideAnim.to.col);
+              const { x, y } = toScreenXY(
+                currentGlide.to.row,
+                currentGlide.to.col
+              );
+              const fadeOpacity = Math.max(0, 1 - glideEased);
+              const shrinkScale = 1 - 0.25 * glideEased;
               return (
                 <g
-                  style={{
-                    transform: `translate(${x}px, ${y}px) scale(${
-                      glideAnim.phase === 'sliding' ? 0.75 : 1
-                    })`,
-                    opacity: glideAnim.phase === 'sliding' ? 0 : 0.9,
-                    transition: `opacity ${MOVE_ANIMATION_MS}ms ease-out, transform ${MOVE_ANIMATION_MS}ms ease-out`,
-                    pointerEvents: 'none',
-                  }}
+                  transform={`translate(${x}, ${y}) scale(${shrinkScale})`}
+                  opacity={fadeOpacity}
+                  style={{ pointerEvents: 'none' }}
                 >
-                  {renderPieceDisc(glideAnim.captured, false, false)}
+                  {renderPieceDisc(currentGlide.captured, false, false)}
                 </g>
               );
             })()}
 
-          {/* Render Pieces on the 9x10 Grid (excluding currently gliding piece so it renders on top) */}
-          {displayState.board.map((rowArr, r) =>
-            rowArr.map((piece: Piece | null, c: number) => {
-              if (!piece) return null;
-
-              const isAnimatedDestination =
-                glideAnim &&
-                glideAnim.phase !== 'done' &&
-                glideAnim.to.row === r &&
-                glideAnim.to.col === c;
-
-              if (isAnimatedDestination) {
-                return null;
+          {/* Render ALL Pieces on the 9x10 Grid Using Pure SVG User-Space `transform` */}
+          {allPiecesToRender.map((item) => (
+            <g
+              key={`piece-${item.row}-${item.col}`}
+              data-piece-square={`${item.row}-${item.col}`}
+              data-piece-fen={item.piece.fenChar}
+              transform={`translate(${item.x}, ${item.y}) scale(${item.scale})`}
+              onClick={() =>
+                selectSquareOrMove({ row: item.row, col: item.col })
               }
-
-              const { x, y } = toScreenXY(r, c);
-              const isSelected =
-                selectedSquare?.row === r && selectedSquare?.col === c;
-
-              return (
-                <g
-                  key={`piece-${r}-${c}`}
-                  onClick={() => selectSquareOrMove({ row: r, col: c })}
-                  className="cursor-pointer"
-                  filter="url(#pieceShadow)"
-                  style={{
-                    transform: `translate(${x}px, ${y}px) scale(${
-                      isSelected ? 1.1 : 1
-                    })`,
-                    transition: `transform ${MOVE_ANIMATION_MS}ms cubic-bezier(0.22, 1, 0.36, 1)`,
-                  }}
-                >
-                  {renderPieceDisc(piece, isSelected, false)}
-                </g>
-              );
-            })
-          )}
-
-          {/* Render Actively Gliding Piece on Top Layer with Slow 700ms Animation */}
-          {glideAnim &&
-            glideAnim.phase !== 'done' &&
-            (() => {
-              const movingPiece =
-                displayState.board[glideAnim.to.row]?.[glideAnim.to.col];
-              if (!movingPiece) return null;
-
-              const fromXY = toScreenXY(glideAnim.from.row, glideAnim.from.col);
-              const toXY = toScreenXY(glideAnim.to.row, glideAnim.to.col);
-              const currentX =
-                glideAnim.phase === 'from' ? fromXY.x : toXY.x;
-              const currentY =
-                glideAnim.phase === 'from' ? fromXY.y : toXY.y;
-
-              return (
-                <g
-                  key={`gliding-${glideAnim.moveKey}`}
-                  filter="url(#pieceShadow)"
-                  style={{
-                    transform: `translate(${currentX}px, ${currentY}px) scale(${
-                      glideAnim.phase === 'sliding' ? 1.12 : 1.05
-                    })`,
-                    transition:
-                      glideAnim.phase === 'sliding'
-                        ? `transform ${MOVE_ANIMATION_MS}ms cubic-bezier(0.22, 1, 0.36, 1)`
-                        : 'none',
-                  }}
-                  onClick={() =>
-                    selectSquareOrMove({
-                      row: glideAnim.to.row,
-                      col: glideAnim.to.col,
-                    })
-                  }
-                  className="cursor-pointer"
-                >
-                  {renderPieceDisc(movingPiece, false, true)}
-                </g>
-              );
-            })()}
+              className="cursor-pointer"
+              filter="url(#pieceShadow)"
+            >
+              {renderPieceDisc(item.piece, item.isSelected, item.isGliding)}
+            </g>
+          ))}
 
           {/* Legal Move Suggestion Dots & Capture Target Rings */}
           {activePieceLegalTargets.map((target) => {

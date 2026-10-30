@@ -24,12 +24,15 @@ import {
   GameOutcome,
   INITIAL_XIANGQI_FEN,
   LobbyRoomSummaryDto,
+  PeerMediaStateDto,
   RoomPlayerState,
   RoomRole,
   RoomStateDto,
   ServerToClientEvents,
   Side,
   SpectatorInfo,
+  WebRtcIceCandidateDto,
+  WebRtcSessionDescriptionDto,
   XiangqiEngine,
 } from '@xiangqi/shared';
 import { ENV } from '../config/env';
@@ -87,6 +90,8 @@ interface ActiveRoomSession {
   spectators: Map<string, SpectatorInfo>; // key = socketId
   drawOfferFrom: Side | null;
   adjournRequestFrom: Side | null;
+  videoCallPendingFrom?: Side | null;
+  isVideoCallActive?: boolean;
   totalTimeMs: number;
   turnTimeMs: number;
   eloChanges: RoomStateDto['eloChanges'];
@@ -188,9 +193,6 @@ export class XiangqiSocketServer {
 
       // Send current lobby room list on connect
       socket.emit('lobby_rooms_updated', this.getLobbyRoomSummaries());
-
-      // Check if player has an active room in Redis/Memory for Graceful Reconnection (F5 / Drop)
-      await this.tryAutoReconnectPlayer(socket);
 
       // Latency Ping Check
       socket.on('ping_check', (_clientTimestamp, callback) => {
@@ -299,12 +301,45 @@ export class XiangqiSocketServer {
         this.handleToggleMutePlayerChat(socket, payload.roomId, payload.muted);
       });
 
+      // P2P WebRTC Video / Voice Call Signaling Events (Strictly 1v1 Players Only)
+      socket.on('video_call_request', (payload) => {
+        this.handleVideoCallRequest(socket, payload);
+      });
+
+      socket.on('video_call_respond', (payload) => {
+        this.handleVideoCallRespond(socket, payload);
+      });
+
+      socket.on('webrtc_offer', (payload) => {
+        this.handleWebRtcOffer(socket, payload);
+      });
+
+      socket.on('webrtc_answer', (payload) => {
+        this.handleWebRtcAnswer(socket, payload);
+      });
+
+      socket.on('webrtc_ice_candidate', (payload) => {
+        this.handleWebRtcIceCandidate(socket, payload);
+      });
+
+      socket.on('webrtc_media_state', (payload) => {
+        this.handleWebRtcMediaState(socket, payload);
+      });
+
+      socket.on('video_call_hangup', (payload) => {
+        this.handleVideoCallHangup(socket, payload);
+      });
+
       // Disconnect Handler (Graceful 60-Second Reconnection Window)
       socket.on('disconnect', () => {
         this.handleSocketDisconnect(socket).catch((err) =>
           console.error('[disconnect error]:', err)
         );
       });
+
+      // Check if player has an active room in Redis/Memory for Graceful Reconnection (F5 / Drop)
+      // Invoked AFTER all synchronous `socket.on(...)` handlers are registered so no rapid client events are lost.
+      await this.tryAutoReconnectPlayer(socket);
     });
   }
 
@@ -426,6 +461,21 @@ export class XiangqiSocketServer {
       }
 
       if (room.status === 'PLAYING' || room.status === 'PAUSED_RECONNECT') {
+        // Terminate any active or ringing P2P Video/Voice Call on socket drop
+        if (room.isVideoCallActive || room.videoCallPendingFrom) {
+          room.isVideoCallActive = false;
+          room.videoCallPendingFrom = null;
+          const remainingPeerSocketId =
+            disconnectedSide === 'w' ? room.blackSocketId : room.redSocketId;
+          if (remainingPeerSocketId) {
+            this.io.to(remainingPeerSocketId).emit('video_call_ended', {
+              roomId: room.roomId,
+              bySide: disconnectedSide,
+              reason: 'PEER_DISCONNECTED',
+            });
+          }
+        }
+
         const now = Date.now();
         const deadline = now + RECONNECT_GRACE_PERIOD_MS;
 
@@ -1028,6 +1078,14 @@ export class XiangqiSocketServer {
       });
       return;
     }
+
+    // Keep moving player's socket binding & room membership synchronized
+    if (role === 'RED_PLAYER') {
+      room.redSocketId = socket.id;
+    } else if (role === 'BLACK_PLAYER') {
+      room.blackSocketId = socket.id;
+    }
+    this.ensureParticipantSocketsJoined(room, socket);
 
     const playerSide: Side = role === 'RED_PLAYER' ? 'w' : 'b';
     if (room.engine.getTurn() !== playerSide) {
@@ -1928,6 +1986,251 @@ export class XiangqiSocketServer {
   }
 
   // ==========================================================================
+  // 9B. P2P WEBRTC VIDEO / VOICE CALL SIGNALING (STRICTLY 1v1 PLAYERS ONLY)
+  // ==========================================================================
+
+  private resolvePvpCallPeer(
+    socket: XiangqiSocket,
+    roomId: string
+  ): {
+    room: ActiveRoomSession;
+    callerSide: Side;
+    callerUsername: string;
+    opponentSocketId: string;
+  } | null {
+    const room = this.activeRooms.get(roomId);
+    if (!room) {
+      socket.emit('error_event', {
+        code: 'ROOM_NOT_FOUND',
+        message: 'Không tìm thấy phòng đấu.',
+      });
+      return null;
+    }
+
+    if (room.mode === 'PVE_AI') {
+      socket.emit('error_event', {
+        code: 'VIDEO_CALL_UNSUPPORTED_MODE',
+        message: 'Tính năng gọi Video chỉ áp dụng cho trận đấu Online giữa 2 kỳ thủ.',
+      });
+      return null;
+    }
+
+    const role = this.getSocketRoleInRoom(room, socket);
+    if (role === 'SPECTATOR') {
+      socket.emit('error_event', {
+        code: 'FORBIDDEN_SPECTATOR',
+        message: 'Khán giả không có quyền tham gia cuộc gọi Video của 2 đấu thủ.',
+      });
+      return null;
+    }
+
+    if (room.status !== 'PLAYING' && room.status !== 'PAUSED_RECONNECT') {
+      socket.emit('error_event', {
+        code: 'VIDEO_CALL_ROOM_INACTIVE',
+        message: 'Chỉ có thể gọi Video khi trận đấu đã đủ 2 kỳ thủ và đang diễn ra.',
+      });
+      return null;
+    }
+
+    // Keep caller's socket ID synced
+    if (role === 'RED_PLAYER') {
+      room.redSocketId = socket.id;
+    } else {
+      room.blackSocketId = socket.id;
+    }
+
+    const callerSide: Side = role === 'RED_PLAYER' ? 'w' : 'b';
+    const opponentPlayer = callerSide === 'w' ? room.blackPlayer : room.redPlayer;
+    const opponentSocketId =
+      callerSide === 'w' ? room.blackSocketId : room.redSocketId;
+
+    if (!opponentPlayer || !opponentPlayer.isConnected || !opponentSocketId) {
+      socket.emit('error_event', {
+        code: 'VIDEO_CALL_PEER_OFFLINE',
+        message: 'Đối thủ hiện đang mất kết nối, chưa thể thực hiện cuộc gọi.',
+      });
+      return null;
+    }
+
+    return {
+      room,
+      callerSide,
+      callerUsername: socket.data.username,
+      opponentSocketId,
+    };
+  }
+
+  private handleVideoCallRequest(
+    socket: XiangqiSocket,
+    payload: { roomId: string; hasVideo: boolean }
+  ): void {
+    if (!payload?.roomId) return;
+    const ctx = this.resolvePvpCallPeer(socket, payload.roomId);
+    if (!ctx) return;
+
+    const { room, callerSide, callerUsername, opponentSocketId } = ctx;
+    room.videoCallPendingFrom = callerSide;
+
+    // Point-to-point delivery ONLY to the opponent socket (never broadcast to spectators)
+    this.io.to(opponentSocketId).emit('video_call_incoming', {
+      roomId: room.roomId,
+      fromSide: callerSide,
+      fromUsername: callerUsername,
+      hasVideo: Boolean(payload.hasVideo),
+    });
+  }
+
+  private handleVideoCallRespond(
+    socket: XiangqiSocket,
+    payload: { roomId: string; accept: boolean; hasVideo?: boolean }
+  ): void {
+    if (!payload?.roomId) return;
+    const ctx = this.resolvePvpCallPeer(socket, payload.roomId);
+    if (!ctx) return;
+
+    const { room, callerSide, callerUsername, opponentSocketId } = ctx;
+    room.videoCallPendingFrom = null;
+
+    if (payload.accept) {
+      room.isVideoCallActive = true;
+      this.io.to(opponentSocketId).emit('video_call_accepted', {
+        roomId: room.roomId,
+        bySide: callerSide,
+        byUsername: callerUsername,
+        hasVideo: payload.hasVideo ?? true,
+      });
+    } else {
+      room.isVideoCallActive = false;
+      this.io.to(opponentSocketId).emit('video_call_declined', {
+        roomId: room.roomId,
+        bySide: callerSide,
+        byUsername: callerUsername,
+      });
+    }
+  }
+
+  private handleWebRtcOffer(
+    socket: XiangqiSocket,
+    payload: {
+      roomId: string;
+      description: WebRtcSessionDescriptionDto;
+      mediaState: PeerMediaStateDto;
+    }
+  ): void {
+    if (!payload?.roomId || !payload.description?.sdp) return;
+    const ctx = this.resolvePvpCallPeer(socket, payload.roomId);
+    if (!ctx) return;
+
+    ctx.room.isVideoCallActive = true;
+    this.io.to(ctx.opponentSocketId).emit('webrtc_offer', {
+      roomId: ctx.room.roomId,
+      fromSide: ctx.callerSide,
+      description: {
+        type: 'offer',
+        sdp: payload.description.sdp,
+      },
+      mediaState: {
+        audioEnabled: Boolean(payload.mediaState?.audioEnabled),
+        videoEnabled: Boolean(payload.mediaState?.videoEnabled),
+      },
+    });
+  }
+
+  private handleWebRtcAnswer(
+    socket: XiangqiSocket,
+    payload: {
+      roomId: string;
+      description: WebRtcSessionDescriptionDto;
+      mediaState: PeerMediaStateDto;
+    }
+  ): void {
+    if (!payload?.roomId || !payload.description?.sdp) return;
+    const ctx = this.resolvePvpCallPeer(socket, payload.roomId);
+    if (!ctx) return;
+
+    ctx.room.isVideoCallActive = true;
+    this.io.to(ctx.opponentSocketId).emit('webrtc_answer', {
+      roomId: ctx.room.roomId,
+      fromSide: ctx.callerSide,
+      description: {
+        type: 'answer',
+        sdp: payload.description.sdp,
+      },
+      mediaState: {
+        audioEnabled: Boolean(payload.mediaState?.audioEnabled),
+        videoEnabled: Boolean(payload.mediaState?.videoEnabled),
+      },
+    });
+  }
+
+  private handleWebRtcIceCandidate(
+    socket: XiangqiSocket,
+    payload: { roomId: string; candidate: WebRtcIceCandidateDto }
+  ): void {
+    if (!payload?.roomId || !payload.candidate || typeof payload.candidate.candidate !== 'string') {
+      return;
+    }
+    const ctx = this.resolvePvpCallPeer(socket, payload.roomId);
+    if (!ctx) return;
+
+    this.io.to(ctx.opponentSocketId).emit('webrtc_ice_candidate', {
+      roomId: ctx.room.roomId,
+      fromSide: ctx.callerSide,
+      candidate: {
+        candidate: payload.candidate.candidate,
+        sdpMid: payload.candidate.sdpMid ?? null,
+        sdpMLineIndex: payload.candidate.sdpMLineIndex ?? null,
+        usernameFragment: payload.candidate.usernameFragment ?? null,
+      },
+    });
+  }
+
+  private handleWebRtcMediaState(
+    socket: XiangqiSocket,
+    payload: { roomId: string; mediaState: PeerMediaStateDto }
+  ): void {
+    if (!payload?.roomId || !payload.mediaState) return;
+    const ctx = this.resolvePvpCallPeer(socket, payload.roomId);
+    if (!ctx) return;
+
+    this.io.to(ctx.opponentSocketId).emit('webrtc_media_state', {
+      roomId: ctx.room.roomId,
+      fromSide: ctx.callerSide,
+      mediaState: {
+        audioEnabled: Boolean(payload.mediaState.audioEnabled),
+        videoEnabled: Boolean(payload.mediaState.videoEnabled),
+      },
+    });
+  }
+
+  private handleVideoCallHangup(
+    socket: XiangqiSocket,
+    payload: { roomId: string; reason?: string }
+  ): void {
+    if (!payload?.roomId) return;
+    const room = this.activeRooms.get(payload.roomId);
+    if (!room || room.mode === 'PVE_AI') return;
+
+    const role = this.getSocketRoleInRoom(room, socket);
+    if (role === 'SPECTATOR') return;
+
+    room.isVideoCallActive = false;
+    room.videoCallPendingFrom = null;
+
+    const callerSide: Side = role === 'RED_PLAYER' ? 'w' : 'b';
+    const opponentSocketId =
+      callerSide === 'w' ? room.blackSocketId : room.redSocketId;
+
+    if (opponentSocketId) {
+      this.io.to(opponentSocketId).emit('video_call_ended', {
+        roomId: room.roomId,
+        bySide: callerSide,
+        reason: payload.reason ?? 'HANGUP',
+      });
+    }
+  }
+
+  // ==========================================================================
   // 10. MATCH FINALIZATION, ELO CALCULATION & POSTGRESQL PERSISTENCE
   // ==========================================================================
 
@@ -1938,6 +2241,26 @@ export class XiangqiSocketServer {
   ): Promise<void> {
     if (room.status === 'FINISHED') return;
     room.status = 'FINISHED';
+
+    // Cleanly terminate any active P2P Video/Voice Call on match completion
+    if (room.isVideoCallActive || room.videoCallPendingFrom) {
+      room.isVideoCallActive = false;
+      room.videoCallPendingFrom = null;
+      if (room.redSocketId) {
+        this.io.to(room.redSocketId).emit('video_call_ended', {
+          roomId: room.roomId,
+          bySide: 'w',
+          reason: 'MATCH_FINISHED',
+        });
+      }
+      if (room.blackSocketId) {
+        this.io.to(room.blackSocketId).emit('video_call_ended', {
+          roomId: room.roomId,
+          bySide: 'b',
+          reason: 'MATCH_FINISHED',
+        });
+      }
+    }
 
     // Clear any active reconnect timers
     for (const [, timer] of room.reconnectTimers) {
@@ -2091,6 +2414,27 @@ export class XiangqiSocketServer {
       return 'BLACK_PLAYER';
     }
     return 'SPECTATOR';
+  }
+
+  private ensureParticipantSocketsJoined(
+    room: ActiveRoomSession,
+    activeSocket?: XiangqiSocket
+  ): void {
+    if (activeSocket && !activeSocket.rooms.has(room.roomId)) {
+      activeSocket.join(room.roomId);
+    }
+    if (room.redSocketId) {
+      const redSock = this.io.sockets.sockets.get(room.redSocketId);
+      if (redSock && !redSock.rooms.has(room.roomId)) {
+        redSock.join(room.roomId);
+      }
+    }
+    if (room.blackSocketId) {
+      const blackSock = this.io.sockets.sockets.get(room.blackSocketId);
+      if (blackSock && !blackSock.rooms.has(room.roomId)) {
+        blackSock.join(room.roomId);
+      }
+    }
   }
 
   private buildDefaultClockState(room: ActiveRoomSession): ClockState {

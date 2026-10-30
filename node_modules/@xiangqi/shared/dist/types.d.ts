@@ -218,6 +218,20 @@ export interface ChatMessageDto {
     content: string;
     timestamp: number;
 }
+export interface WebRtcSessionDescriptionDto {
+    type: 'offer' | 'answer';
+    sdp: string;
+}
+export interface WebRtcIceCandidateDto {
+    candidate: string;
+    sdpMid: string | null;
+    sdpMLineIndex: number | null;
+    usernameFragment?: string | null;
+}
+export interface PeerMediaStateDto {
+    audioEnabled: boolean;
+    videoEnabled: boolean;
+}
 export interface RoomStateDto {
     roomId: string;
     roomName: string;
@@ -341,6 +355,37 @@ export interface ClientToServerEvents {
         roomId: string;
         muted: boolean;
     }) => void;
+    video_call_request: (payload: {
+        roomId: string;
+        hasVideo: boolean;
+    }) => void;
+    video_call_respond: (payload: {
+        roomId: string;
+        accept: boolean;
+        hasVideo?: boolean;
+    }) => void;
+    webrtc_offer: (payload: {
+        roomId: string;
+        description: WebRtcSessionDescriptionDto;
+        mediaState: PeerMediaStateDto;
+    }) => void;
+    webrtc_answer: (payload: {
+        roomId: string;
+        description: WebRtcSessionDescriptionDto;
+        mediaState: PeerMediaStateDto;
+    }) => void;
+    webrtc_ice_candidate: (payload: {
+        roomId: string;
+        candidate: WebRtcIceCandidateDto;
+    }) => void;
+    webrtc_media_state: (payload: {
+        roomId: string;
+        mediaState: PeerMediaStateDto;
+    }) => void;
+    video_call_hangup: (payload: {
+        roomId: string;
+        reason?: string;
+    }) => void;
     ping_check: (clientTimestamp: number, callback: (serverTimestamp: number) => void) => void;
 }
 export interface ServerToClientEvents {
@@ -402,6 +447,50 @@ export interface ServerToClientEvents {
         spectators: SpectatorInfo[];
     }) => void;
     chat_message: (message: ChatMessageDto) => void;
+    video_call_incoming: (payload: {
+        roomId: string;
+        fromSide: Side;
+        fromUsername: string;
+        hasVideo: boolean;
+    }) => void;
+    video_call_accepted: (payload: {
+        roomId: string;
+        bySide: Side;
+        byUsername: string;
+        hasVideo: boolean;
+    }) => void;
+    video_call_declined: (payload: {
+        roomId: string;
+        bySide: Side;
+        byUsername: string;
+    }) => void;
+    webrtc_offer: (payload: {
+        roomId: string;
+        fromSide: Side;
+        description: WebRtcSessionDescriptionDto;
+        mediaState: PeerMediaStateDto;
+    }) => void;
+    webrtc_answer: (payload: {
+        roomId: string;
+        fromSide: Side;
+        description: WebRtcSessionDescriptionDto;
+        mediaState: PeerMediaStateDto;
+    }) => void;
+    webrtc_ice_candidate: (payload: {
+        roomId: string;
+        fromSide: Side;
+        candidate: WebRtcIceCandidateDto;
+    }) => void;
+    webrtc_media_state: (payload: {
+        roomId: string;
+        fromSide: Side;
+        mediaState: PeerMediaStateDto;
+    }) => void;
+    video_call_ended: (payload: {
+        roomId: string;
+        bySide: Side;
+        reason?: string;
+    }) => void;
     error_event: (payload: {
         code: string;
         message: string;

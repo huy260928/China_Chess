@@ -8,10 +8,12 @@ import { Socket } from 'socket.io';
 
 interface SocketRateBucket {
   timestamps: number[];
+  iceTimestamps: number[];
   violations: number;
 }
 
-const MAX_EVENTS_PER_WINDOW = 25; // Max 25 socket events per 5-second window
+const MAX_EVENTS_PER_WINDOW = 25; // Max 25 gameplay socket events per 5-second window
+const MAX_ICE_EVENTS_PER_WINDOW = 120; // Dedicated Trickle ICE candidate quota per 5-second window
 const WINDOW_MS = 5000;
 const MAX_VIOLATIONS_BEFORE_DISCONNECT = 5;
 
@@ -23,7 +25,7 @@ export class SocketSecurityGuard {
    */
   public attachToSocket(socket: Socket): void {
     const key = socket.id;
-    this.buckets.set(key, { timestamps: [], violations: 0 });
+    this.buckets.set(key, { timestamps: [], iceTimestamps: [], violations: 0 });
 
     socket.use((packet, next) => {
       const eventName = packet[0];
@@ -34,7 +36,34 @@ export class SocketSecurityGuard {
       }
 
       const now = Date.now();
-      const bucket = this.buckets.get(key) ?? { timestamps: [], violations: 0 };
+      const bucket = this.buckets.get(key) ?? {
+        timestamps: [],
+        iceTimestamps: [],
+        violations: 0,
+      };
+
+      // Separate Trickle ICE bursts from gameplay events while still preventing ICE floods
+      if (eventName === 'webrtc_ice_candidate') {
+        bucket.iceTimestamps = bucket.iceTimestamps.filter(
+          (ts) => now - ts < WINDOW_MS
+        );
+        if (bucket.iceTimestamps.length >= MAX_ICE_EVENTS_PER_WINDOW) {
+          bucket.violations++;
+          this.buckets.set(key, bucket);
+          socket.emit('error_event', {
+            code: 'SOCKET_RATE_LIMIT_EXCEEDED',
+            message: 'Tần suất gói tin kết nối Video quá cao.',
+          });
+          if (bucket.violations >= MAX_VIOLATIONS_BEFORE_DISCONNECT) {
+            socket.disconnect(true);
+          }
+          return;
+        }
+        bucket.iceTimestamps.push(now);
+        this.buckets.set(key, bucket);
+        return next();
+      }
+
       bucket.timestamps = bucket.timestamps.filter((ts) => now - ts < WINDOW_MS);
 
       if (bucket.timestamps.length >= MAX_EVENTS_PER_WINDOW) {

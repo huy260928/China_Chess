@@ -49,7 +49,10 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
 
 export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
-  accessToken: localStorage.getItem('xiangqi_at'),
+  accessToken:
+    typeof localStorage !== 'undefined'
+      ? localStorage.getItem('xiangqi_at')
+      : null,
   isLoadingAuth: true,
   authError: null,
   savedGames: [],

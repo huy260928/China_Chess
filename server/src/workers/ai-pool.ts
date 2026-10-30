@@ -7,7 +7,7 @@ import os from 'os';
 import path from 'path';
 import fs from 'fs';
 import { Worker } from 'worker_threads';
-import { AiDifficulty, AiMoveRequest, AiMoveResponse, Side } from '@xiangqi/shared';
+import { AiDifficulty, AiMoveRequest, AiMoveResponse } from '@xiangqi/shared';
 
 interface QueuedAiTask {
   request: AiMoveRequest;

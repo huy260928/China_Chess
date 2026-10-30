@@ -1,0 +1,1 @@
+{"version":3,"file":"socket-security.middleware.d.ts","sourceRoot":"","sources":["../../src/middlewares/socket-security.middleware.ts"],"names":[],"mappings":"AAMA,OAAO,EAAE,MAAM,EAAE,MAAM,WAAW,CAAC;AAanC,qBAAa,mBAAmB;IAC9B,OAAO,CAAC,OAAO,CAAuC;IAEtD;;OAEG;IACI,cAAc,CAAC,MAAM,EAAE,MAAM,GAAG,IAAI;CA6F5C;AAED,eAAO,MAAM,mBAAmB,qBAA4B,CAAC"}

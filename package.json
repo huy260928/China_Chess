@@ -17,7 +17,8 @@
     "dev:client": "npm --workspace=client run dev",
     "test:shared": "npm --workspace=shared run test",
     "test:server": "npm --workspace=server run test",
-    "test": "npm run test:shared && npm run test:server",
+    "test:client": "npm --workspace=client run test",
+    "test": "npm run test:shared && npm run test:server && npm run test:client",
     "prisma:generate": "npm --workspace=server run prisma:generate",
     "prisma:migrate": "npm --workspace=server run prisma:migrate"
   },

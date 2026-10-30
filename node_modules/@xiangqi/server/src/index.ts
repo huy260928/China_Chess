@@ -4,14 +4,17 @@
 
 import http from 'http';
 import { ENV } from './config/env';
-import { prisma } from './config/database';
+import { connectAndSeedDatabase, prisma } from './config/database';
 import { redisStore } from './config/redis';
 import { createExpressApp } from './app';
 import { XiangqiSocketServer } from './socket/socket-manager';
 import { getAiWorkerPool } from './workers/ai-pool';
 
 async function bootstrap(): Promise<void> {
-  // 1. Connect to Redis State Store
+  // 1. Connect to PostgreSQL 18 (`xiangqi_db`) & migrate/seed initial data
+  await connectAndSeedDatabase();
+
+  // 2. Connect to Redis State Store
   await redisStore.connect();
 
   // 2. Initialize AI Worker Thread Pool
